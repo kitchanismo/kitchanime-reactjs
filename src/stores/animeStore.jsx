@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { AnimeContext } from '../context'
 import { getPagedAnimes } from '../services/animeService'
 import { sortBy, formatDate } from '../services/utilsService'
-import { pageLimit } from '../config.json'
+import { pagination } from '../config.json'
 import { Link } from 'react-router-dom'
 
 class AnimeStore extends Component {
@@ -61,7 +61,7 @@ class AnimeStore extends Component {
 
     let { data: animes, lastPage } = await getPagedAnimes(
       this.state.paginate.pageNum,
-      pageLimit
+      pagination.perPage
     )
 
     const paginate = { ...this.state.paginate }
@@ -74,7 +74,7 @@ class AnimeStore extends Component {
   }
 
   handlePageChange = async pageNum => {
-    let { data: animes } = await getPagedAnimes(pageNum, pageLimit)
+    let { data: animes } = await getPagedAnimes(pageNum, pagination.perPage)
 
     const paginate = { ...this.state.paginate }
 

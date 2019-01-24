@@ -1,16 +1,17 @@
 import React, { Component } from 'react'
 import { AnimeContext } from './../../context'
 import { createArray } from '../../services/utilsService'
-import { navigateLimit } from '../../config.json'
+import { pagination } from '../../config.json'
 
 class Paginate extends Component {
   static contextType = AnimeContext
 
-  state = { start: 1, end: navigateLimit }
+  state = { start: 1, end: pagination.pageNumbers }
 
   doNext = pageNum => {
     const { paginate } = this.context.state
     const { start, end } = this.state
+
     if (paginate.pages === pageNum) return
 
     this.context.onPageChange(pageNum + 1)
@@ -18,16 +19,6 @@ class Paginate extends Component {
     if (end === paginate.pages) return
 
     this.setState({ start: start + 1, end: end + 1 })
-  }
-
-  doNavigate = (label, doChange) => {
-    return (
-      <li>
-        <a href="#" className="page-link" onClick={() => doChange}>
-          {label}
-        </a>
-      </li>
-    )
   }
 
   doPrev = pageNum => {
@@ -43,9 +34,11 @@ class Paginate extends Component {
     const { onPageChange } = this.context
     const { paginate } = this.context.state
     let { start, end } = this.state
-    if (paginate.pages < navigateLimit) {
+
+    if (paginate.pages < pagination.pageNumbers) {
       end = paginate.pages
     }
+
     return createArray(start, end).map(pageNum => (
       <li
         key={pageNum}
@@ -66,7 +59,7 @@ class Paginate extends Component {
     return (
       <nav>
         <ul className="pagination">
-          {paginate.pages > navigateLimit && (
+          {paginate.pages > pagination.pageNumbers && (
             <React.Fragment>
               <li>
                 <a
@@ -75,7 +68,7 @@ class Paginate extends Component {
                   onClick={() => {
                     if (paginate.pageNum === 1) return
                     this.context.onPageChange(1)
-                    this.setState({ start: 1, end: navigateLimit })
+                    this.setState({ start: 1, end: pagination.pageNumbers })
                   }}
                 >
                   {'first'}
@@ -96,7 +89,7 @@ class Paginate extends Component {
 
           {paginate.pages > 1 && this.renderPages()}
 
-          {paginate.pages > navigateLimit && (
+          {paginate.pages > pagination.pageNumbers && (
             <React.Fragment>
               <li>
                 <a
@@ -116,7 +109,7 @@ class Paginate extends Component {
                     if (paginate.pages === paginate.pageNum) return
                     this.context.onPageChange(paginate.pages)
                     this.setState({
-                      start: paginate.pages - (navigateLimit - 1),
+                      start: paginate.pages - (pagination.pageNumbers - 1),
                       end: paginate.pages
                     })
                   }}
@@ -126,8 +119,11 @@ class Paginate extends Component {
               </li>
             </React.Fragment>
           )}
+
+          <span className="mt-1 ml-2">{`${paginate.pageNum} of ${
+            paginate.pages
+          }`}</span>
         </ul>
-        <span>{`${paginate.pageNum} of ${paginate.pages}`}</span>
       </nav>
     )
   }

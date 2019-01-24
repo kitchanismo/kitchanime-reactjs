@@ -1,5 +1,7 @@
 {
   "apiUrl": "http://localhost:3333/api",
-  "pageLimit": 6,
-  "navigateLimit": 5
+  "pagination": {
+    "perPage": 10,
+    "pageNumbers": 5
+  }
 }
