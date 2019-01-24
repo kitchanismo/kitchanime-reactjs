@@ -2,6 +2,6 @@
   "apiUrl": "http://localhost:3333/api",
   "pagination": {
     "perPage": 10,
-    "pageNumbers": 5
+    "pageNumbers": 3
   }
 }

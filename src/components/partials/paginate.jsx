@@ -120,10 +120,16 @@ class Paginate extends Component {
             </React.Fragment>
           )}
 
-          <span className="mt-1 ml-2">{`${paginate.pageNum} of ${
+          <span className="page-of">{`${paginate.pageNum} of ${
             paginate.pages
           }`}</span>
         </ul>
+        <style jsx>{`
+          .page-of {
+            margin-top: 7px;
+            margin-left: 10px;
+          }
+        `}</style>
       </nav>
     )
   }

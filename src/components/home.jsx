@@ -12,7 +12,7 @@ class Home extends Component {
 
     return (
       <React.Fragment>
-        <h1>Animes</h1>
+        <h1 className="mb-3">Animes</h1>
         <Table
           columns={columns}
           data={this.transformAnimes(this.context.state.animes)}
