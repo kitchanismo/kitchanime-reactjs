@@ -11,3 +11,11 @@ export function toElipse(str, end = 20) {
 }
 
 export const formatDate = date => new Date(date).toLocaleDateString()
+
+export const createArray = num => {
+  let arr = []
+  for (let i = 1; i <= num; i++) {
+    arr.push(i)
+  }
+  return arr
+}

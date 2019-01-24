@@ -1,11 +1,16 @@
 import React, { Component } from 'react'
 import { AnimeContext } from '../context'
-import { getAnimes } from '../services/animeService'
-import { sortBy, formatDate } from './../services/utilsService'
+import { getPagedAnimes } from '../services/animeService'
+import { sortBy, formatDate } from '../services/utilsService'
+import { pageLimit } from '../config.json'
 import { Link } from 'react-router-dom'
 
-class AnimeProvider extends Component {
-  state = { animes: [], sortColumn: { path: 'title', order: 'asc' } }
+class AnimeStore extends Component {
+  state = {
+    paginate: { pageNum: 1, pages: 0 },
+    animes: [],
+    sortColumn: { path: 'title', order: 'asc' }
+  }
 
   columns = [
     {
@@ -52,10 +57,31 @@ class AnimeProvider extends Component {
   }
 
   async componentDidMount() {
-    let { animes } = await getAnimes()
+    const { sortColumn } = this.state
 
-    animes = sortBy(animes, this.state.sortColumn)
-    this.setState({ animes })
+    let { data: animes, lastPage } = await getPagedAnimes(
+      this.state.paginate.pageNum,
+      pageLimit
+    )
+
+    const paginate = { ...this.state.paginate }
+
+    paginate.pages = lastPage
+
+    animes = sortBy(animes, sortColumn)
+
+    this.setState({ animes, paginate })
+  }
+
+  handlePageChange = async pageNum => {
+    let { data: animes } = await getPagedAnimes(pageNum, pageLimit)
+
+    const paginate = { ...this.state.paginate }
+
+    paginate.pageNum = pageNum
+
+    this.setState({ animes, paginate })
+    //this.props.history.replace(`/animes/page/${pageNum}`)
   }
 
   handleSort = sortColumn => {
@@ -78,7 +104,8 @@ class AnimeProvider extends Component {
           state: this.state,
           columns: this.columns,
           onSort: this.handleSort,
-          onDelete: this.handleDelete
+          onDelete: this.handleDelete,
+          onPageChange: this.handlePageChange
         }}
       >
         {this.props.children}
@@ -87,4 +114,4 @@ class AnimeProvider extends Component {
   }
 }
 
-export default AnimeProvider
+export default AnimeStore

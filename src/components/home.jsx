@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Table from './partials/table'
+import Paginate from './partials/paginate'
 import { AnimeContext } from './../context'
 import { toElipse } from '../services/utilsService'
 
@@ -10,12 +11,16 @@ class Home extends Component {
     const { columns, state, onSort } = this.context
 
     return (
-      <Table
-        columns={columns}
-        data={this.transformAnimes(this.context.state.animes)}
-        sortColumn={state.sortColumn}
-        onSort={onSort}
-      />
+      <React.Fragment>
+        <h1>Animes</h1>
+        <Table
+          columns={columns}
+          data={this.transformAnimes(this.context.state.animes)}
+          sortColumn={state.sortColumn}
+          onSort={onSort}
+        />
+        <Paginate />
+      </React.Fragment>
     )
   }
 

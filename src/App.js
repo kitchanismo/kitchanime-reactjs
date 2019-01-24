@@ -1,7 +1,7 @@
 import { Route, Redirect, Switch } from 'react-router-dom'
 import React, { Component } from 'react'
 
-import AnimeProvider from './providers/animeProvider'
+import AnimeStore from './stores/animeStore'
 
 import Nav from './components/partials/nav'
 import Home from './components/home'
@@ -15,17 +15,18 @@ class App extends Component {
     return (
       <React.Fragment>
         <Nav />
-        <AnimeProvider>
+        <AnimeStore>
           <main className="container">
             <Switch>
               <Route path="/home" component={Home} />
               <Route path="/animes/:id" component={AnimeForm} />
+              <Route path="/animes/page/:num" component={AnimeForm} />
               <Route path="/not-found" component={NotFound} />
               <Redirect from="/" exact to="/home" />
               <Redirect to="/not-found" />
             </Switch>
           </main>
-        </AnimeProvider>
+        </AnimeStore>
       </React.Fragment>
     )
   }

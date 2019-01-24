@@ -1,25 +1,23 @@
 import http from './httpService'
-import { apiUrl } from '../config.json'
-
-const apiEndpoint = apiUrl + '/animes'
-
-function movieUrl(id) {
-  return `${apiEndpoint}/${id}`
-}
 
 export function getAnimes() {
-  return http.get(apiEndpoint).then(data => data.data)
+  return http.get('/animes').then(data => data.data)
 }
 
-export function getAnime(movieId) {
-  return http.get(movieUrl(movieId))
+export function getPagedAnimes(num, limit) {
+  return http
+    .get(`/animes/page/${num}?limit=${limit}`)
+    .then(data => data.data.data)
 }
 
-// export function getAnimes() {
-//   return new Promise((resolve, reject) => {
-//     resolve([
-//       { id: 1, title: 'abcd', description: '123' },
-//       { id: 2, title: 'bcd', description: '435' }
-//     ])
-//   })
-// }
+export function getGenres() {
+  return http.get('/genres').then(data => data.data)
+}
+
+export function getAnime(id) {
+  return http.get(`/animes/${id}`).then(data => data.data)
+}
+
+export function postAnime(anime) {
+  return http.post('/animes', anime)
+}
