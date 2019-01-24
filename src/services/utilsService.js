@@ -12,9 +12,9 @@ export function toElipse(str, end = 20) {
 
 export const formatDate = date => new Date(date).toLocaleDateString()
 
-export const createArray = num => {
+export const createArray = (start, end) => {
   let arr = []
-  for (let i = 1; i <= num; i++) {
+  for (let i = start; i <= end; i++) {
     arr.push(i)
   }
   return arr

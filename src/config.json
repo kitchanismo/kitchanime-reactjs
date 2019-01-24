@@ -1,4 +1,5 @@
 {
   "apiUrl": "http://localhost:3333/api",
-  "pageLimit": 3
+  "pageLimit": 6,
+  "navigateLimit": 5
 }
