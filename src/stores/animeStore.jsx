@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { AnimeContext } from '../context'
 import { getPagedAnimes } from '../services/animeService'
-import { sortBy, formatDate } from '../services/utilsService'
+import { sortBy } from '../services/utilsService'
 import { pagination } from '../config.json'
 import { Link } from 'react-router-dom'
 
@@ -22,8 +22,7 @@ class AnimeStore extends Component {
     { path: 'season', label: 'Season' },
     {
       path: 'releaseDate',
-      label: 'Release',
-      content: anime => formatDate(anime.releaseDate)
+      label: 'Release'
     },
     {
       path: 'genres.name',
@@ -38,12 +37,10 @@ class AnimeStore extends Component {
     {
       key: 'delete',
       content: anime => (
-        <button
-          onClick={() => this.context.onDelete(anime)}
-          className="btn btn-danger btn-sm"
-        >
-          Delete
-        </button>
+        <a
+          onClick={() => this.handleDelete(anime)}
+          className="btn btn-danger btn-sm fa fa-trash text-white mr-0"
+        />
       )
     }
   ]

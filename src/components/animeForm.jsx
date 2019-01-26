@@ -1,31 +1,65 @@
 import React, { Component } from 'react'
 import Joi from 'joi-browser'
 import Form from './partials/form'
-import { getGenres, getAnime, postAnime } from '../services/animeService'
+import {
+  getGenres,
+  getAnime,
+  getStudios,
+  postAnime
+} from '../services/animeService'
 
 class AnimeForm extends Form {
   state = {
     data: {
       title: '',
-      description: ''
+      description: '',
+      genres: [],
+      studios: []
     },
+    errors: {},
     genres: [],
-    errors: {}
+    studios: [],
+    selectedGenres: null,
+    selectedStudios: null
   }
-
   schema = {
-    id: Joi.string(),
+    id: Joi.number().integer(),
     title: Joi.string()
       .required()
       .label('Title'),
     description: Joi.string()
       .required()
-      .label('Description')
+      .label('Description'),
+    season: Joi.any().optional(),
+    type: Joi.any().optional(),
+    releaseDate: Joi.any().optional(),
+    imageUrl: Joi.any().optional(),
+    genreIds: Joi.any().optional(),
+    studioIds: Joi.any().optional(),
+    genre: Joi.any().optional(),
+    studio: Joi.any().optional()
   }
 
   loadGenres = async () => {
     let { genres } = await getGenres()
+
+    genres = genres.map(g => {
+      return this.mapToSelect(g)
+    })
     this.setState({ genres })
+  }
+
+  loadStudios = async () => {
+    let { studios } = await getStudios()
+
+    studios = studios.map(s => {
+      return this.mapToSelect(s)
+    })
+    this.setState({ studios })
+  }
+
+  mapToModel({ id, value }) {
+    return { id, name: value }
   }
 
   loadAnime = async () => {
@@ -34,8 +68,17 @@ class AnimeForm extends Form {
 
       if (id === 'new') return
 
-      let { anime } = await getAnime(id)
-      this.setState({ data: anime })
+      let { anime: data } = await getAnime(id)
+
+      const selectedGenres = data.genres.map(g => {
+        return this.mapToSelect(g)
+      })
+
+      const selectedStudios = data.studios.map(s => {
+        return this.mapToSelect(s)
+      })
+
+      this.setState({ data, selectedGenres, selectedStudios })
     } catch (err) {
       if (err.response && err.response.status === 404)
         this.props.history.replace('/not-found')
@@ -44,11 +87,27 @@ class AnimeForm extends Form {
 
   async componentDidMount() {
     await this.loadAnime()
-    // await this.loadGenres()
+    await this.loadGenres()
+    await this.loadStudios()
   }
+
   doSubmit = async () => {
-    await postAnime(this.state.data)
+    const { data, selectedGenres, selectedStudios } = this.state
+    const anime = { ...data }
+    anime.genreIds = selectedGenres.map(g => g.id)
+    anime.studioIds = selectedStudios.map(s => s.id)
+    await postAnime(anime)
+    this.props.history.replace('/')
   }
+
+  handleChangeGenres = selectedGenres => {
+    this.setState({ selectedGenres })
+  }
+
+  handleChangeStudios = selectedStudios => {
+    this.setState({ selectedStudios })
+  }
+
   render() {
     return (
       <div className="col-8 offset-2">
@@ -56,6 +115,21 @@ class AnimeForm extends Form {
         <form onSubmit={this.handleSubmit}>
           {this.renderInput('title', 'Title')}
           {this.renderInput('description', 'Description')}
+          {this.renderSelect(
+            'genreIds',
+            'Genres',
+            this.state.selectedGenres,
+            this.handleChangeGenres,
+            this.state.genres
+          )}
+          {this.renderSelect(
+            'studioIds',
+            'Studios',
+            this.state.selectedStudios,
+            this.handleChangeStudios,
+            this.state.studios
+          )}
+
           {this.renderButton('Save')}
         </form>
       </div>

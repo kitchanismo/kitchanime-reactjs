@@ -14,6 +14,10 @@ export function getGenres() {
   return http.get('/genres').then(data => data.data)
 }
 
+export function getStudios() {
+  return http.get('/studios').then(data => data.data)
+}
+
 export function getAnime(id) {
   return http.get(`/animes/${id}`).then(data => data.data)
 }

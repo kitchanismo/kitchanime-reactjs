@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Table from './partials/table'
 import Paginate from './partials/paginate'
 import { AnimeContext } from './../context'
-import { toElipse } from '../services/utilsService'
+import { toElipse, formatDate } from '../services/utilsService'
 
 class Home extends Component {
   static contextType = AnimeContext
@@ -26,10 +26,9 @@ class Home extends Component {
 
   transformAnimes(animes) {
     return animes.map(anime => {
-      return {
-        ...anime,
-        description: toElipse(anime.description, 30)
-      }
+      anime.description = toElipse(anime.description, 20)
+      anime.releaseDate = formatDate(anime.releaseDate)
+      return anime
     })
   }
 }

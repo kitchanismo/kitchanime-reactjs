@@ -6,13 +6,16 @@ import { pagination } from '../../config.json'
 class Paginate extends Component {
   static contextType = AnimeContext
 
-  state = { start: 1, end: pagination.pageNumbers }
+  state = { start: null, end: null }
 
+  constructor() {
+    super()
+    this.state.start = 1
+    this.state.end = pagination.pageNumbers
+  }
   doNext = pageNum => {
     const { paginate } = this.context.state
     const { start, end } = this.state
-
-    if (paginate.pages === pageNum) return
 
     this.context.onPageChange(pageNum + 1)
 
@@ -23,7 +26,7 @@ class Paginate extends Component {
 
   doPrev = pageNum => {
     const { start, end } = this.state
-    if (1 === pageNum) return
+
     this.context.onPageChange(pageNum - 1)
 
     if (start === 1) return
@@ -53,84 +56,115 @@ class Paginate extends Component {
     ))
   }
 
+  isNavHidden = () => {
+    return this.context.state.paginate.pages > pagination.pageNumbers
+  }
+
+  isPagesHidden = () => {
+    return this.context.state.paginate.pages > 1
+  }
+
+  isFirstDisabled = () => {
+    return this.context.state.paginate.pageNum === 1 ? 'disabled' : ''
+  }
+
+  isLastDisabled = () => {
+    const { pages, pageNum } = this.context.state.paginate
+    return pages === pageNum ? 'disabled' : ''
+  }
+
   render() {
     const { paginate } = this.context.state
 
     return (
-      <nav>
-        <ul className="pagination">
-          {paginate.pages > pagination.pageNumbers && (
-            <React.Fragment>
-              <li>
-                <a
-                  href="#"
-                  className="page-link"
-                  onClick={() => {
-                    if (paginate.pageNum === 1) return
-                    this.context.onPageChange(1)
-                    this.setState({ start: 1, end: pagination.pageNumbers })
-                  }}
-                >
-                  {'first'}
-                </a>
-              </li>
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-6 px-0">
+            <nav>
+              <ul className="pagination ">
+                {this.isNavHidden() && (
+                  <React.Fragment>
+                    <li className={`page-item ${this.isFirstDisabled()}`}>
+                      <button
+                        href="#"
+                        className="page-link"
+                        onClick={() => {
+                          if (paginate.pageNum === 1) return
+                          this.context.onPageChange(1)
+                          this.setState({
+                            start: 1,
+                            end: pagination.pageNumbers
+                          })
+                        }}
+                      >
+                        {'first'}
+                      </button>
+                    </li>
 
-              <li>
-                <a
-                  href="#"
-                  className="page-link"
-                  onClick={() => this.doPrev(paginate.pageNum)}
-                >
-                  {'<<'}
-                </a>
-              </li>
-            </React.Fragment>
-          )}
+                    <li className={`page-item ${this.isFirstDisabled()}`}>
+                      <button
+                        href="#"
+                        className="page-link"
+                        aria-label="Previous"
+                        onClick={() => this.doPrev(paginate.pageNum)}
+                      >
+                        &laquo;
+                      </button>
+                    </li>
+                  </React.Fragment>
+                )}
 
-          {paginate.pages > 1 && this.renderPages()}
+                {this.isPagesHidden() && this.renderPages()}
 
-          {paginate.pages > pagination.pageNumbers && (
-            <React.Fragment>
-              <li>
-                <a
-                  href="#"
-                  className="page-link"
-                  onClick={() => this.doNext(paginate.pageNum)}
-                >
-                  {'>>'}
-                </a>
-              </li>
+                {this.isNavHidden() && (
+                  <React.Fragment>
+                    <li className={`page-item ${this.isLastDisabled()}`}>
+                      <button
+                        href="#"
+                        className="page-link"
+                        aria-label="Next"
+                        onClick={() => this.doNext(paginate.pageNum)}
+                      >
+                        &raquo;
+                      </button>
+                    </li>
 
-              <li>
-                <a
-                  href="#"
-                  className="page-link"
-                  onClick={() => {
-                    if (paginate.pages === paginate.pageNum) return
-                    this.context.onPageChange(paginate.pages)
-                    this.setState({
-                      start: paginate.pages - (pagination.pageNumbers - 1),
-                      end: paginate.pages
-                    })
-                  }}
-                >
-                  {'last'}
-                </a>
-              </li>
-            </React.Fragment>
-          )}
-
-          <span className="page-of">{`${paginate.pageNum} of ${
-            paginate.pages
-          }`}</span>
-        </ul>
-        <style jsx>{`
-          .page-of {
-            margin-top: 7px;
-            margin-left: 10px;
-          }
-        `}</style>
-      </nav>
+                    <li className={`page-item ${this.isLastDisabled()}`}>
+                      <button
+                        href="#"
+                        className="page-link"
+                        onClick={() => {
+                          this.context.onPageChange(paginate.pages)
+                          this.setState({
+                            start:
+                              paginate.pages - (pagination.pageNumbers - 1),
+                            end: paginate.pages
+                          })
+                        }}
+                      >
+                        {'last'}
+                      </button>
+                    </li>
+                  </React.Fragment>
+                )}
+              </ul>
+            </nav>
+          </div>
+          <div className="pages px-0 col-6">
+            <p className="page-of">{`${paginate.pageNum} of ${
+              paginate.pages
+            }`}</p>
+          </div>
+          <style jsx>{`
+            .pages {
+              text-align: right;
+            }
+            .page-of {
+              margin-top: 10px;
+            }
+          `}</style>
+        </div>
+      </div>
     )
   }
 }
