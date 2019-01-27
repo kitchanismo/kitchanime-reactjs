@@ -6,17 +6,21 @@ import { AnimeContext } from './../context'
 class Home extends Component {
   static contextType = AnimeContext
 
-  render() {
+  renderTitle = () => {
     const { state } = this.context
-
+    return (
+      <div className="row align-items-center">
+        <h1 className="mb-3">Animes</h1>
+        <span className="badge badge-pill badge-primary ml-2">
+          {state.paginate.total}
+        </span>
+      </div>
+    )
+  }
+  render() {
     return (
       <React.Fragment>
-        <div className="row align-items-center">
-          <h1 className="mb-3">Animes</h1>
-          <span className="badge badge-pill badge-primary ml-2">
-            {state.paginate.total}
-          </span>
-        </div>
+        {this.renderTitle()}
         <Animes />
         <Paginate />
       </React.Fragment>
