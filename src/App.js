@@ -18,11 +18,11 @@ class App extends Component {
         <AnimeStore>
           <main className="container">
             <Switch>
-              <Route path="/animes" component={Home} />
+              <Route exact path="/home" component={Home} />
               <Route path="/animes/:id" component={AnimeForm} />
               <Route path="/animes/page/:num" component={AnimeForm} />
               <Route path="/not-found" component={NotFound} />
-              <Redirect from="/" exact to="/animes" />
+              <Redirect from="/" exact to="/home" />
               <Redirect to="/not-found" />
             </Switch>
           </main>

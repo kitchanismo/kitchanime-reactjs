@@ -16,11 +16,12 @@ class Form extends Component {
   validate = () => {
     const options = { abortEarly: false }
     const { error } = Joi.validate(this.state.data, this.schema, options)
+
     if (!error) return null
 
     const errors = {}
     for (let item of error.details) errors[item.path[0]] = item.message
-    return false // return errors
+    return errors
   }
 
   validateProperty = ({ name, value }) => {
@@ -60,12 +61,12 @@ class Form extends Component {
     )
   }
 
-  renderSelect(name, label, value, onChange, options) {
+  renderSelect(name, label, value, onChange, options, isMulti) {
     return (
       <div className="form-group">
         <label htmlFor={name}>{label}</label>
         <Select
-          isMulti
+          {...isMulti}
           isSearchable
           value={value}
           onChange={onChange}

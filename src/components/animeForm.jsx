@@ -5,23 +5,34 @@ import {
   getGenres,
   getAnime,
   getStudios,
-  postAnime
+  getSeasons,
+  getTypes,
+  postAnime,
+  putAnime
 } from '../services/animeService'
 
 class AnimeForm extends Form {
   state = {
     data: {
+      id: 0,
       title: '',
       description: '',
+      season: '',
+      type: '',
       genres: [],
       studios: []
     },
     errors: {},
     genres: [],
     studios: [],
-    selectedGenres: null,
-    selectedStudios: null
+    seasons: [],
+    types: [],
+    selectedGenres: [],
+    selectedStudios: [],
+    selectedSeason: {},
+    selectedType: {}
   }
+
   schema = {
     id: Joi.number().integer(),
     title: Joi.string()
@@ -34,10 +45,8 @@ class AnimeForm extends Form {
     type: Joi.any().optional(),
     releaseDate: Joi.any().optional(),
     imageUrl: Joi.any().optional(),
-    genreIds: Joi.any().optional(),
-    studioIds: Joi.any().optional(),
-    genre: Joi.any().optional(),
-    studio: Joi.any().optional()
+    genres: Joi.any().optional(),
+    studios: Joi.any().optional()
   }
 
   loadGenres = async () => {
@@ -58,6 +67,16 @@ class AnimeForm extends Form {
     this.setState({ studios })
   }
 
+  loadSeasons = () => {
+    let seasons = getSeasons()
+    this.setState({ seasons })
+  }
+
+  loadTypes = () => {
+    let types = getTypes()
+    this.setState({ types })
+  }
+
   mapToModel({ id, value }) {
     return { id, name: value }
   }
@@ -68,17 +87,27 @@ class AnimeForm extends Form {
 
       if (id === 'new') return
 
-      let { anime: data } = await getAnime(id)
+      let { anime } = await getAnime(id)
 
-      const selectedGenres = data.genres.map(g => {
+      const selectedGenres = anime.genres.map(g => {
         return this.mapToSelect(g)
       })
 
-      const selectedStudios = data.studios.map(s => {
+      const selectedStudios = anime.studios.map(s => {
         return this.mapToSelect(s)
       })
 
-      this.setState({ data, selectedGenres, selectedStudios })
+      const selectedSeason = this.mapToSelect({ id: null, name: anime.season })
+
+      const selectedType = this.mapToSelect({ id: null, name: anime.type })
+
+      this.setState({
+        data: anime,
+        selectedGenres,
+        selectedStudios,
+        selectedSeason,
+        selectedType
+      })
     } catch (err) {
       if (err.response && err.response.status === 404)
         this.props.history.replace('/not-found')
@@ -89,19 +118,44 @@ class AnimeForm extends Form {
     await this.loadAnime()
     await this.loadGenres()
     await this.loadStudios()
+    this.loadSeasons()
+    this.loadTypes()
   }
 
   doSubmit = async () => {
-    const { data, selectedGenres, selectedStudios } = this.state
+    const {
+      data,
+      selectedGenres,
+      selectedStudios,
+      selectedSeason,
+      selectedType
+    } = this.state
+
     const anime = { ...data }
-    anime.genreIds = selectedGenres.map(g => g.id)
-    anime.studioIds = selectedStudios.map(s => s.id)
-    await postAnime(anime)
-    this.props.history.replace('/')
+
+    anime.genreIds = selectedGenres.map(g => g.id) || []
+    anime.studioIds = selectedStudios.map(s => s.id) || []
+    anime.season = selectedSeason.value || ''
+    anime.type = selectedType.value || ''
+    anime.releaseDate = anime.releaseDate || new Date('1/12/2019')
+
+    const { id } = anime.id
+      ? await putAnime(anime.id, anime)
+      : await postAnime(anime)
+
+    this.props.history.replace('/animes/' + id)
   }
 
   handleChangeGenres = selectedGenres => {
     this.setState({ selectedGenres })
+  }
+
+  handleChangeSeason = selectedSeason => {
+    this.setState({ selectedSeason })
+  }
+
+  handleChangeType = selectedType => {
+    this.setState({ selectedType })
   }
 
   handleChangeStudios = selectedStudios => {
@@ -109,25 +163,46 @@ class AnimeForm extends Form {
   }
 
   render() {
+    console.log(this.context)
     return (
       <div className="col-8 offset-2">
         <h1>Anime Form</h1>
         <form onSubmit={this.handleSubmit}>
           {this.renderInput('title', 'Title')}
           {this.renderInput('description', 'Description')}
+
+          {this.renderSelect(
+            'type',
+            'Type',
+            this.state.selectedType,
+            this.handleChangeType,
+            this.state.types
+          )}
+
+          {this.renderSelect(
+            'season',
+            'Season',
+            this.state.selectedSeason,
+            this.handleChangeSeason,
+            this.state.seasons
+          )}
+
           {this.renderSelect(
             'genreIds',
             'Genres',
             this.state.selectedGenres,
             this.handleChangeGenres,
-            this.state.genres
+            this.state.genres,
+            { isMulti: true }
           )}
+
           {this.renderSelect(
             'studioIds',
             'Studios',
             this.state.selectedStudios,
             this.handleChangeStudios,
-            this.state.studios
+            this.state.studios,
+            { isMulti: true }
           )}
 
           {this.renderButton('Save')}
