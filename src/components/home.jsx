@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Paginate from './partials/paginate'
+import Paginate from './paginate'
 import Animes from './animes'
 import { AnimeContext } from './../context'
 

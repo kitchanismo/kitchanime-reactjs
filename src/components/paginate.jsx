@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { AnimeContext } from './../../context'
-import { createArray } from '../../services/utilsService'
-import { pagination } from '../../config.json'
+import { AnimeContext } from '../context'
+import { createArray } from '../services/utilsService'
+import { pagination } from '../config.json'
 
 class Paginate extends Component {
   static contextType = AnimeContext
