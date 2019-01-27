@@ -1,98 +1,52 @@
 import React, { Component } from 'react'
 import { AnimeContext } from '../context'
 import { getPagedAnimes, deleteAnime } from '../services/animeService'
-import { sortBy } from '../services/utilsService'
 import { pagination } from '../config.json'
-import { Link } from 'react-router-dom'
 
 class AnimeStore extends Component {
   state = {
     paginate: { pageNum: 1, pages: 0, total: null },
-    animes: [],
-    sortColumn: { path: 'title', order: 'asc' }
-  }
-
-  columns = [
-    {
-      path: 'title',
-      label: 'Title',
-      content: anime => <Link to={`/animes/${anime.id}`}>{anime.title}</Link>
-    },
-    { path: 'description', label: 'Description' },
-    { path: 'season', label: 'Season' },
-    {
-      path: 'type',
-      label: 'Type'
-    },
-    {
-      path: 'imageUrl',
-      label: 'Image Url'
-    },
-    {
-      path: 'releaseDate',
-      label: 'Release'
-    },
-    {
-      path: 'genres.name',
-      label: 'Genres',
-      content: anime => this.renderItemsName(anime.genres)
-    },
-    {
-      path: 'studios.name',
-      label: 'Studios',
-      content: anime => this.renderItemsName(anime.studios)
-    },
-    {
-      key: 'delete',
-      content: anime => (
-        <a
-          onClick={() => this.handleDelete(anime)}
-          className="btn btn-danger btn-sm fa fa-trash text-white mr-0"
-        />
-      )
-    }
-  ]
-
-  renderItemsName = items => {
-    return items.map((item, i) => (
-      <span key={i} className="badge ml-1  badge-secondary">
-        {item.name}
-      </span>
-    ))
+    animes: []
+    // data: {
+    //   paginate: { pageNum: 1, pages: 0, total: null },
+    //   animes: [],
+    // }
   }
 
   async componentDidMount() {
-    const { sortColumn } = this.state
+    await this.initialPage()
+  }
+
+  initialPage = async () => {
+    const { paginate } = this.state
 
     let { data: animes, lastPage, total } = await getPagedAnimes(
-      this.state.paginate.pageNum,
+      paginate.pageNum,
       pagination.perPage
     )
 
-    const paginate = { ...this.state.paginate }
+    const initPage = { ...paginate }
 
-    paginate.pages = lastPage
-    paginate.total = total
+    initPage.pages = lastPage
+    initPage.total = total
 
-    animes = sortBy(animes, sortColumn)
-
-    this.setState({ animes, paginate })
+    this.setState({ animes, paginate: initPage })
   }
 
   handlePageChange = async pageNum => {
-    let { data: animes } = await getPagedAnimes(pageNum, pagination.perPage)
-
     const paginate = { ...this.state.paginate }
+
+    if (paginate.pageNum === pageNum) return
 
     paginate.pageNum = pageNum
 
+    let { data: animes } = await getPagedAnimes(pageNum, pagination.perPage)
+
     this.setState({ animes, paginate })
-    //this.props.history.replace(`/animes/page/${pageNum}`)
   }
 
-  handleSort = sortColumn => {
-    const animes = sortBy(this.state.animes, sortColumn)
-    this.setState({ sortColumn, animes })
+  handleSet = animes => {
+    this.setState({ animes })
   }
 
   handleDelete = async anime => {
@@ -116,10 +70,9 @@ class AnimeStore extends Component {
       <AnimeContext.Provider
         value={{
           state: this.state,
-          columns: this.columns,
-          onSort: this.handleSort,
           onDelete: this.handleDelete,
-          onPageChange: this.handlePageChange
+          onPageChange: this.handlePageChange,
+          onSet: this.handleSet
         }}
       >
         {this.props.children}

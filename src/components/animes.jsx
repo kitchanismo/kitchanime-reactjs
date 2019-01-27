@@ -2,9 +2,62 @@ import React, { Component } from 'react'
 import { AnimeContext } from './../context'
 import { toElipse, formatDate } from '../services/utilsService'
 import Table from './partials/table'
+import { Link } from 'react-router-dom'
+import { sortBy } from './../services/utilsService'
 
 class Movies extends Component {
   static contextType = AnimeContext
+  state = {
+    sortColumn: { path: 'title', order: 'asc' }
+  }
+  columns = [
+    {
+      path: 'title',
+      label: 'Title',
+      content: anime => <Link to={`/animes/${anime.id}`}>{anime.title}</Link>
+    },
+    { path: 'description', label: 'Description' },
+    { path: 'season', label: 'Season' },
+    {
+      path: 'type',
+      label: 'Type'
+    },
+    {
+      path: 'imageUrl',
+      label: 'Image Url'
+    },
+    {
+      path: 'releaseDate',
+      label: 'Release'
+    },
+    {
+      path: 'genres.name',
+      label: 'Genres',
+      content: anime => this.renderItemsName(anime.genres)
+    },
+    {
+      path: 'studios.name',
+      label: 'Studios',
+      content: anime => this.renderItemsName(anime.studios)
+    },
+    {
+      key: 'delete',
+      content: anime => (
+        <a
+          onClick={() => this.context.onDelete(anime)}
+          className="btn btn-danger btn-sm fa fa-trash text-white mr-0"
+        />
+      )
+    }
+  ]
+
+  renderItemsName = items => {
+    return items.map((item, i) => (
+      <span key={i} className="badge ml-1  badge-secondary">
+        {item.name}
+      </span>
+    ))
+  }
 
   transformAnimes(animes) {
     return animes.map(anime => {
@@ -15,14 +68,21 @@ class Movies extends Component {
     })
   }
 
+  handleSort = sortColumn => {
+    const animes = sortBy(this.context.state.animes, sortColumn)
+    this.context.onSet(animes)
+    this.setState({ sortColumn })
+  }
+
   render() {
-    const { columns, state, onSort } = this.context
+    const { state } = this.context
+    const animes = sortBy(animes, this.state.sortColumn)
     return (
       <Table
-        columns={columns}
+        columns={this.columns}
         data={this.transformAnimes(state.animes)}
-        sortColumn={state.sortColumn}
-        onSort={onSort}
+        sortColumn={this.state.sortColumn}
+        onSort={this.handleSort}
       />
     )
   }
