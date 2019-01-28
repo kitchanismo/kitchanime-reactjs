@@ -27,7 +27,9 @@ class Form extends Component {
   validateProperty = ({ name, value }) => {
     const obj = { [name]: value }
     const schema = { [name]: this.schema[name] }
+
     const { error } = Joi.validate(obj, schema)
+
     return error ? error.details[0].message : null
   }
 
@@ -38,28 +40,49 @@ class Form extends Component {
     this.setState({ errors: errors || {} })
     if (errors) return
 
-    this.doSubmit()
+    this.doSubmit(e)
   }
 
   handleChange = ({ currentTarget: input }) => {
     const errors = { ...this.state.errors }
     const errorMessage = this.validateProperty(input)
+
     if (errorMessage) errors[input.name] = errorMessage
     else delete errors[input.name]
+
+    const newErrors = this.ClearConfirmPassword(
+      input,
+      errors,
+      this.state.data.password
+    )
 
     const data = { ...this.state.data }
     data[input.name] = input.value
 
-    this.setState({ data, errors })
+    this.setState({ data, errors: newErrors })
+  }
+
+  ClearConfirmPassword(input, errors, password) {
+    const newErrors = { ...errors }
+    if (input.name === 'confirmPassword') {
+      if (input.value === password) {
+        delete newErrors[input.name]
+      }
+    }
+    return newErrors
   }
 
   renderButton(label) {
     return (
-      <button disabled={this.validate()} className="btn btn-primary">
+      <button
+        disabled={this.validate() || Object.keys(this.state.errors).length > 0}
+        className="btn btn-primary"
+      >
         {label}
       </button>
     )
   }
+  errorMessage
 
   renderSelect(name, label, value, onChange, options, isMulti) {
     return (
@@ -76,7 +99,7 @@ class Form extends Component {
     )
   }
 
-  renderInput(name, label, type = 'text') {
+  renderInput(name, label, type = 'text', onBlur) {
     const { data, errors } = this.state
 
     return (
@@ -87,6 +110,7 @@ class Form extends Component {
         label={label}
         onChange={this.handleChange}
         error={errors[name]}
+        {...onBlur}
       />
     )
   }

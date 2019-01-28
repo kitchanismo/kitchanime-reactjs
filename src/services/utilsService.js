@@ -23,3 +23,5 @@ export const createArray = (start, end) => {
   }
   return arr
 }
+
+export const capitalize = str => _.startCase(str)

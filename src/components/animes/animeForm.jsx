@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import Joi from 'joi-browser'
 import Form from '../partials/form'
 import {
@@ -36,17 +36,16 @@ class AnimeForm extends Form {
   schema = {
     id: Joi.number().integer(),
     title: Joi.string()
+      .min(3)
       .required()
       .label('Title'),
-    description: Joi.string()
-      .required()
-      .label('Description'),
-    season: Joi.any().optional(),
-    type: Joi.any().optional(),
-    releaseDate: Joi.any().optional(),
-    imageUrl: Joi.any().optional(),
-    genres: Joi.any().optional(),
-    studios: Joi.any().optional()
+    description: Joi.optional(),
+    season: Joi.optional(),
+    type: Joi.optional(),
+    releaseDate: Joi.optional(),
+    imageUrl: Joi.optional(),
+    genres: Joi.array().optional(),
+    studios: Joi.array().optional()
   }
 
   loadGenres = async () => {

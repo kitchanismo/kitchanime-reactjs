@@ -11,7 +11,7 @@ axios.interceptors.response.use(null, error => {
 
 axios.interceptors.request.use(
   config => {
-    const { method, url } = config
+    const { url } = config
 
     config.baseURL = appUrl
 

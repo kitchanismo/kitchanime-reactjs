@@ -80,7 +80,6 @@ class Movies extends Component {
 
   render() {
     const { state } = this.context
-    const animes = sortBy(animes, this.state.sortColumn)
     return (
       <Table
         columns={this.columns}

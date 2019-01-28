@@ -8,6 +8,7 @@ import Home from './components/home'
 import NotFound from './components/partials/notFound'
 import AnimeForm from './components/animes/animeForm'
 import LoginForm from './components/auth/loginForm'
+import RegisterForm from './components/auth/registerForm'
 
 import './App.css'
 
@@ -21,6 +22,7 @@ class App extends Component {
             <Switch>
               <Route exact path="/home" component={Home} />
               <Route exact path="/login" component={LoginForm} />
+              <Route exact path="/register" component={RegisterForm} />
               <Route path="/animes/:id" component={AnimeForm} />
               <Route path="/animes/page/:num" component={AnimeForm} />
               <Route path="/not-found" component={NotFound} />
