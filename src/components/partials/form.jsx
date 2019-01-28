@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import Joi from 'joi-browser'
 import Input from './input'
 import Select from 'react-select'
+import { capitalize } from './../../services/utilsService'
 
 class Form extends Component {
   state = {
@@ -10,7 +11,7 @@ class Form extends Component {
   }
 
   mapToSelect({ id, name }) {
-    return { id, label: name, value: name }
+    return { id, label: capitalize(name), value: name }
   }
 
   validate = () => {

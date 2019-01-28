@@ -7,10 +7,6 @@ class AnimeStore extends Component {
   state = {
     paginate: { pageNum: 1, pages: 0, total: null },
     animes: []
-    // data: {
-    //   paginate: { pageNum: 1, pages: 0, total: null },
-    //   animes: [],
-    // }
   }
 
   async componentDidMount() {
@@ -61,8 +57,6 @@ class AnimeStore extends Component {
     } catch (err) {
       this.setState({ animes: originalAnimes, paginate })
     }
-
-    // delete on server
   }
 
   render() {

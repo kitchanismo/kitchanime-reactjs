@@ -2,7 +2,7 @@ import React from 'react'
 import Form from './../partials/form'
 import Joi from 'joi-browser'
 import { register } from './../../services/authService'
-import { isUsernameTaken, isEmailTaken } from './../../services/userService'
+import { isUsernameTaken, isEmailTaken } from './../../services/authService'
 import { capitalize } from './../../services/utilsService'
 
 class RegisterForm extends Form {
@@ -37,12 +37,22 @@ class RegisterForm extends Form {
   }
 
   doSubmit = async e => {
-    const hasErrors = await this.handleCheckUser(e)
+    const errors = await this.handleCheckUser(e)
 
-    if (hasErrors) return
-    
+    if (Object.keys(errors).length > 0) return
+
     const user = { ...this.state.data }
+
     await register(user)
+
+    const data = {
+      username: '',
+      password: '',
+      email: '',
+      confirmPassword: ''
+    }
+
+    this.setState({ data, errors })
   }
 
   handleCheckUser = async ({ currentTarget: input }) => {
@@ -61,7 +71,7 @@ class RegisterForm extends Form {
 
     this.setState({ errors })
 
-    return Object.keys(errors).length > 0
+    return errors
   }
 
   render() {

@@ -24,7 +24,6 @@ class App extends Component {
               <Route exact path="/login" component={LoginForm} />
               <Route exact path="/register" component={RegisterForm} />
               <Route path="/animes/:id" component={AnimeForm} />
-              <Route path="/animes/page/:num" component={AnimeForm} />
               <Route path="/not-found" component={NotFound} />
               <Redirect from="/" exact to="/home" />
               <Redirect to="/not-found" />
