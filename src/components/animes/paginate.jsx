@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { AnimeContext } from '../context'
-import { createArray } from '../services/utilsService'
-import { pagination } from '../config.json'
+import { AnimeContext } from '../../context'
+import { createArray } from '../../services/utilsService'
+import { pagination } from '../../config.json'
 
 class Paginate extends Component {
   static contextType = AnimeContext
@@ -49,9 +49,9 @@ class Paginate extends Component {
           pageNum === paginate.pageNum ? 'page-item active' : 'page-item'
         }
       >
-        <a href="#" className="page-link" onClick={() => onPageChange(pageNum)}>
+        <button className="page-link" onClick={() => onPageChange(pageNum)}>
           {pageNum}
-        </a>
+        </button>
       </li>
     ))
   }
@@ -79,14 +79,13 @@ class Paginate extends Component {
     return (
       <div className="container-fluid">
         <div className="row">
-          <div className="col-6 px-0">
+          <div className="col d-flex justify-content-start px-0">
             <nav>
-              <ul className="pagination ">
+              <ul className="pagination">
                 {this.isNavHidden() && (
                   <React.Fragment>
                     <li className={`page-item ${this.isFirstDisabled()}`}>
                       <button
-                        href="#"
                         className="page-link"
                         onClick={() => {
                           if (paginate.pageNum === 1) return
@@ -103,7 +102,6 @@ class Paginate extends Component {
 
                     <li className={`page-item ${this.isFirstDisabled()}`}>
                       <button
-                        href="#"
                         className="page-link"
                         aria-label="Previous"
                         onClick={() => this.doPrev(paginate.pageNum)}
@@ -120,7 +118,6 @@ class Paginate extends Component {
                   <React.Fragment>
                     <li className={`page-item ${this.isLastDisabled()}`}>
                       <button
-                        href="#"
                         className="page-link"
                         aria-label="Next"
                         onClick={() => this.doNext(paginate.pageNum)}
@@ -131,7 +128,6 @@ class Paginate extends Component {
 
                     <li className={`page-item ${this.isLastDisabled()}`}>
                       <button
-                        href="#"
                         className="page-link"
                         onClick={() => {
                           this.context.onPageChange(paginate.pages)
@@ -150,19 +146,21 @@ class Paginate extends Component {
               </ul>
             </nav>
           </div>
-          <div className="pages px-0 col-6">
+          <div className="pages px-0 col d-flex justify-content-end">
             <p className="page-of">{`${paginate.pageNum} of ${
               paginate.pages
             }`}</p>
           </div>
-          <style jsx>{`
-            .pages {
-              text-align: right;
-            }
-            .page-of {
-              margin-top: 10px;
-            }
-          `}</style>
+          <style jsx>
+            {`
+              .pages {
+                text-align: right;
+              }
+              .page-of {
+                margin-top: 10px;
+              }
+            `}
+          </style>
         </div>
       </div>
     )

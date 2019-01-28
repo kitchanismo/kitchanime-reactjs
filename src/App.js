@@ -6,7 +6,8 @@ import AnimeStore from './stores/animeStore'
 import Nav from './components/partials/nav'
 import Home from './components/home'
 import NotFound from './components/partials/notFound'
-import AnimeForm from './components/animeForm'
+import AnimeForm from './components/animes/animeForm'
+import LoginForm from './components/auth/loginForm'
 
 import './App.css'
 
@@ -19,6 +20,7 @@ class App extends Component {
           <main className="container">
             <Switch>
               <Route exact path="/home" component={Home} />
+              <Route exact path="/login" component={LoginForm} />
               <Route path="/animes/:id" component={AnimeForm} />
               <Route path="/animes/page/:num" component={AnimeForm} />
               <Route path="/not-found" component={NotFound} />

@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import Paginate from './paginate'
-import Animes from './animes'
+import Paginate from './animes/paginate'
+import Animes from './animes/index'
 import { AnimeContext } from './../context'
+import { Link } from 'react-router-dom'
 
 class Home extends Component {
   static contextType = AnimeContext
@@ -9,11 +10,22 @@ class Home extends Component {
   renderTitle = () => {
     const { state } = this.context
     return (
-      <div className="row align-items-center">
-        <h1 className="mb-3">Animes</h1>
-        <span className="badge badge-pill badge-primary ml-2">
-          {state.paginate.total}
-        </span>
+      <div className="container-fluid">
+        <div className="row align-items-center">
+          <div className="col  d-flex justify-content-start align-items-center">
+            <span>
+              <h1 className="mb-3">Animes</h1>
+            </span>
+            <span className="badge badge-pill badge-primary ml-2">
+              {state.paginate.total}
+            </span>
+          </div>
+          <div className="col d-flex justify-content-end">
+            <Link to="/animes/new">
+              <button className="btn fa fa-plus btn-primary btn-lg " />
+            </Link>
+          </div>
+        </div>
       </div>
     )
   }

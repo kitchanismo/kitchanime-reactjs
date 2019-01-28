@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Joi from 'joi-browser'
-import Form from './partials/form'
+import Form from '../partials/form'
 import {
   getGenres,
   getAnime,
@@ -9,7 +9,7 @@ import {
   getTypes,
   postAnime,
   putAnime
-} from '../services/animeService'
+} from '../../services/animeService'
 
 class AnimeForm extends Form {
   state = {
@@ -89,17 +89,12 @@ class AnimeForm extends Form {
 
       let { anime } = await getAnime(id)
 
-      const selectedGenres = anime.genres.map(g => {
-        return this.mapToSelect(g)
-      })
-
-      const selectedStudios = anime.studios.map(s => {
-        return this.mapToSelect(s)
-      })
-
-      const selectedSeason = this.mapToSelect({ id: null, name: anime.season })
-
-      const selectedType = this.mapToSelect({ id: null, name: anime.type })
+      const {
+        selectedGenres,
+        selectedStudios,
+        selectedSeason,
+        selectedType
+      } = this.mapToData(anime)
 
       this.setState({
         data: anime,
@@ -112,6 +107,18 @@ class AnimeForm extends Form {
       if (err.response && err.response.status === 404)
         this.props.history.replace('/not-found')
     }
+  }
+
+  mapToData(anime) {
+    const selectedGenres = anime.genres.map(g => {
+      return this.mapToSelect(g)
+    })
+    const selectedStudios = anime.studios.map(s => {
+      return this.mapToSelect(s)
+    })
+    const selectedSeason = this.mapToSelect({ id: null, name: anime.season })
+    const selectedType = this.mapToSelect({ id: null, name: anime.type })
+    return { selectedGenres, selectedStudios, selectedSeason, selectedType }
   }
 
   async componentDidMount() {
@@ -163,10 +170,11 @@ class AnimeForm extends Form {
   }
 
   render() {
-    console.log(this.context)
+    const id = this.props.match.params.id
+
     return (
       <div className="col-8 offset-2">
-        <h1>Anime Form</h1>
+        <h1>{id !== 'new' ? 'Edit Form' : 'Add Form'}</h1>
         <form onSubmit={this.handleSubmit}>
           {this.renderInput('title', 'Title')}
           {this.renderInput('description', 'Description')}
@@ -205,7 +213,7 @@ class AnimeForm extends Form {
             { isMulti: true }
           )}
 
-          {this.renderButton('Save')}
+          {this.renderButton(id !== 'new' ? 'Update' : 'Save')}
         </form>
       </div>
     )

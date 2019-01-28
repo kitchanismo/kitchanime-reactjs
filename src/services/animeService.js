@@ -1,25 +1,25 @@
 import http from './httpService'
 
 export function getAnimes() {
-  return http.get('/animes').then(data => data.data)
+  return http.get('/api/animes').then(data => data.data)
 }
 
 export function getPagedAnimes(num, limit) {
   return http
-    .get(`/animes/page/${num}?limit=${limit}`)
+    .get(`/api/animes/page/${num}?limit=${limit}`)
     .then(data => data.data.data)
 }
 
 export function getGenres() {
-  return http.get('/genres').then(data => data.data)
+  return http.get('/api/genres').then(data => data.data)
 }
 
 export function getStudios() {
-  return http.get('/studios').then(data => data.data)
+  return http.get('/api/studios').then(data => data.data)
 }
 
 export function getAnime(id) {
-  return http.get(`/animes/${id}`).then(data => data.data)
+  return http.get(`/api/animes/${id}`).then(data => data.data)
 }
 
 export function getSeasons() {
@@ -42,13 +42,13 @@ export function getTypes() {
 }
 
 export function postAnime(anime) {
-  return http.post('/animes', anime).then(data => data.data)
+  return http.post('/api/animes', anime).then(data => data.data)
 }
 
 export function putAnime(id, anime) {
-  return http.put('/animes/' + id, anime).then(data => data.data)
+  return http.put('/api/animes/' + id, anime).then(data => data.data)
 }
 
 export function deleteAnime(id) {
-  return http.delete('/animes/' + id).then(data => data.data)
+  return http.delete('/api/animes/' + id).then(data => data.data)
 }

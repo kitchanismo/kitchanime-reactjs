@@ -1,5 +1,5 @@
 {
-  "apiUrl": "http://localhost:3333/api",
+  "appUrl": "http://localhost:3333",
   "pagination": {
     "perPage": 10,
     "pageNumbers": 3

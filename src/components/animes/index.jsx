@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { AnimeContext } from './../context'
-import { toElipse, formatDate } from '../services/utilsService'
-import Table from './partials/table'
+import { AnimeContext } from '../../context'
+import { toElipse, formatDate } from '../../services/utilsService'
+import Table from '../partials/table'
 import { Link } from 'react-router-dom'
-import { sortBy } from './../services/utilsService'
+import { sortBy } from '../../services/utilsService'
 
 class Movies extends Component {
   static contextType = AnimeContext
@@ -31,22 +31,26 @@ class Movies extends Component {
       label: 'Release'
     },
     {
-      path: 'genres.name',
       label: 'Genres',
       content: anime => this.renderItemsName(anime.genres)
     },
     {
-      path: 'studios.name',
       label: 'Studios',
       content: anime => this.renderItemsName(anime.studios)
     },
     {
-      key: 'delete',
+      key: 'actions',
+      label: 'Actions',
       content: anime => (
-        <a
-          onClick={() => this.context.onDelete(anime)}
-          className="btn btn-danger btn-sm fa fa-trash text-white mr-0"
-        />
+        <React.Fragment>
+          <Link to={`/animes/${anime.id}`}>
+            <button className="btn btn-warning btn-sm mr-1 fa fa-pencil text-white" />
+          </Link>
+          <button
+            onClick={() => this.context.onDelete(anime)}
+            className="btn btn-danger btn-sm fa fa-trash text-white"
+          />
+        </React.Fragment>
       )
     }
   ]
