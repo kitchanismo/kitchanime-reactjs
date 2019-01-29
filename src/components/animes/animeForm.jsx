@@ -13,6 +13,7 @@ import {
   putAnime
 } from '../../services/animeService'
 import auth from '../../services/authService'
+import Spinner from './../partials/spinner'
 
 class AnimeForm extends Form {
   state = {
@@ -50,6 +51,25 @@ class AnimeForm extends Form {
     imageUrl: Joi.optional(),
     genres: Joi.array().optional(),
     studios: Joi.array().optional()
+  }
+
+  customStyles = {
+    option: (provided, state) => ({
+      ...provided,
+      borderBottom: '1px dotted pink',
+      color: state.isSelected ? 'red' : 'blue',
+      padding: 20
+    }),
+    control: () => ({
+      // none of react-select's styles are passed to <Control />
+      width: 200
+    }),
+    singleValue: (provided, state) => {
+      const opacity = state.isDisabled ? 0.5 : 1
+      const transition = 'opacity 300ms'
+
+      return { ...provided, opacity, transition }
+    }
   }
 
   loadGenres = async () => {
@@ -154,11 +174,7 @@ class AnimeForm extends Form {
       ? await putAnime(anime.id, anime)
       : await postAnime(anime)
 
-    if (anime.id) {
-      this.props.history.replace('/animes/' + id)
-    } else {
-      this.props.history.replace('/')
-    }
+    this.props.history.replace('/')
   }
 
   handleChangeGenres = selectedGenres => this.setState({ selectedGenres })
@@ -181,58 +197,60 @@ class AnimeForm extends Form {
     const id = this.props.match.params.id
 
     return (
-      <div className="col-8 offset-2">
-        <h1>{id !== 'new' ? 'Edit Form' : 'Add Form'}</h1>
-        <form onSubmit={this.handleSubmit}>
-          {this.renderInput('title', 'Title')}
-          {this.renderTextArea('description', 'Description')}
+      <Spinner isLoaded={this.state.studios.length > 0 || id === 'new'}>
+        <div className="col-8 offset-2">
+          <h1>{id !== 'new' ? 'Edit Form' : 'Add Form'}</h1>
+          <form onSubmit={this.handleSubmit}>
+            {this.renderInput('title', 'Title')}
+            {this.renderTextArea('description', 'Description')}
 
-          {this.renderSelect(
-            'type',
-            'Type',
-            this.state.selectedType,
-            this.handleChangeType,
-            this.state.types
-          )}
+            {this.renderSelect(
+              'type',
+              'Type',
+              this.state.selectedType,
+              this.handleChangeType,
+              this.state.types
+            )}
 
-          <div className="row">
-            <div className="col-8">
-              {this.renderSelect(
-                'season',
-                'Season',
-                this.state.selectedSeason,
-                this.handleChangeSeason,
-                this.state.seasons
-              )}
+            <div className="row">
+              <div className="col-8">
+                {this.renderSelect(
+                  'season',
+                  'Season',
+                  this.state.selectedSeason,
+                  this.handleChangeSeason,
+                  this.state.seasons
+                )}
+              </div>
+              <div className="col-4 d-flex justify-content-end">
+                {this.renderDatePicker('releaseDate', 'Release', {
+                  onChange: this.handleDateChange
+                })}
+              </div>
             </div>
-            <div className="col-4 d-flex justify-content-end">
-              {this.renderDatePicker('releaseDate', 'Release', {
-                onChange: this.handleDateChange
-              })}
-            </div>
-          </div>
 
-          {this.renderSelect(
-            'genreIds',
-            'Genres',
-            this.state.selectedGenres,
-            this.handleChangeGenres,
-            this.state.genres,
-            { isMulti: true }
-          )}
+            {this.renderSelect(
+              'genreIds',
+              'Genres',
+              this.state.selectedGenres,
+              this.handleChangeGenres,
+              this.state.genres,
+              { isMulti: true }
+            )}
 
-          {this.renderSelect(
-            'studioIds',
-            'Studios',
-            this.state.selectedStudios,
-            this.handleChangeStudios,
-            this.state.studios,
-            { isMulti: true }
-          )}
+            {this.renderSelect(
+              'studioIds',
+              'Studios',
+              this.state.selectedStudios,
+              this.handleChangeStudios,
+              this.state.studios,
+              { isMulti: true }
+            )}
 
-          {this.renderButton(id !== 'new' ? 'Update' : 'Save')}
-        </form>
-      </div>
+            {this.renderButton(id !== 'new' ? 'Update' : 'Save')}
+          </form>
+        </div>
+      </Spinner>
     )
   }
 }

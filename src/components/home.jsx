@@ -3,6 +3,7 @@ import Paginate from './animes/paginate'
 import Animes from './animes/index'
 import { AnimeContext } from './../context'
 import { Link } from 'react-router-dom'
+import Spinner from './partials/spinner'
 
 class Home extends Component {
   static contextType = AnimeContext
@@ -17,9 +18,11 @@ class Home extends Component {
             <span>
               <h1 className="mb-3">Animes</h1>
             </span>
-            <span className="badge badge-pill badge-primary ml-2">
-              {state.paginate.total}
-            </span>
+            <h5>
+              <span className="badge badge-pill badge-primary ml-2">
+                {state.paginate.total}
+              </span>
+            </h5>
           </div>
           <div className="col d-flex justify-content-end">
             <Link to="/animes/new">
@@ -31,12 +34,14 @@ class Home extends Component {
     )
   }
   render() {
+    const { animes } = this.context.state
+
     return (
-      <React.Fragment>
+      <Spinner isLoaded={animes.length > 0}>
         {this.renderTitle()}
         <Animes {...this.props} />
         <Paginate />
-      </React.Fragment>
+      </Spinner>
     )
   }
 }

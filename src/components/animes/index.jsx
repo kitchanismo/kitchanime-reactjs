@@ -16,20 +16,21 @@ class Movies extends Component {
       label: 'Title',
       content: anime => <Link to={`/animes/${anime.id}`}>{anime.title}</Link>
     },
-    { path: 'description', label: 'Description' },
+    // { path: 'description', label: 'Description' },
     { path: 'season', label: 'Season' },
-    {
-      path: 'type',
-      label: 'Type'
-    },
-    {
-      path: 'imageUrl',
-      label: 'Image Url'
-    },
     {
       path: 'releaseDate',
       label: 'Release'
     },
+    {
+      path: 'type',
+      label: 'Type'
+    },
+    // {
+    //   path: 'imageUrl',
+    //   label: 'Image Url'
+    // },
+
     {
       label: 'Genres',
       content: anime => this.renderItemsName(anime.genres)
@@ -86,6 +87,7 @@ class Movies extends Component {
 
   render() {
     const { state } = this.context
+
     return (
       <Table
         columns={this.columns}
