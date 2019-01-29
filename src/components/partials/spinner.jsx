@@ -5,17 +5,20 @@ class Spinner extends Component {
     return (
       <React.Fragment>
         {!this.props.isLoaded && (
-          <div className="d-flex justify-content-center justify-items-center mt-5">
-            <div className="mt-5 spinner-grow" role="status">
+          <div className="spin d-flex justify-content-center justify-items-center">
+            <div className="spinner spinner-grow" role="status">
               <span className="sr-only">Loading...</span>
             </div>
           </div>
         )}
         {this.props.isLoaded && this.props.children}
         <style jsx>{`
-          .spinner-content {
-            width: 3rem !important;
-            height: 3rem !important;
+          .spin {
+            position: fixed;
+            z-index: 1031;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
           }
         `}</style>
       </React.Fragment>

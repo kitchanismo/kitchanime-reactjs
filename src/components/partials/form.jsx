@@ -75,11 +75,11 @@ class Form extends Component {
     return newErrors
   }
 
-  renderButton(label) {
+  renderButton(label, classes = '') {
     return (
       <button
         disabled={this.validate() || Object.keys(this.state.errors).length > 0}
-        className="btn btn-primary"
+        className={`btn btn-primary ${classes}`}
       >
         {label}
       </button>

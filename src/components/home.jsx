@@ -12,23 +12,21 @@ class Home extends Component {
     const { state } = this.context
 
     return (
-      <div className="container-fluid">
-        <div className="row align-items-center">
-          <div className="col  d-flex justify-content-start align-items-center">
-            <span>
-              <h1 className="mb-3">Animes</h1>
+      <div className="row no-gutters align-items-center">
+        <div className="col  d-flex justify-content-start align-items-center">
+          <span>
+            <h1 className="mb-3">Animes</h1>
+          </span>
+          <h5>
+            <span className="badge badge-pill badge-primary ml-2">
+              {state.paginate.total}
             </span>
-            <h5>
-              <span className="badge badge-pill badge-primary ml-2">
-                {state.paginate.total}
-              </span>
-            </h5>
-          </div>
-          <div className="col d-flex justify-content-end">
-            <Link to="/animes/new">
-              <button className="btn fa fa-plus btn-primary btn-lg " />
-            </Link>
-          </div>
+          </h5>
+        </div>
+        <div className="col d-flex justify-content-end">
+          <Link to="/animes/new">
+            <button className="btn fa fa-plus btn-success btn-lg " />
+          </Link>
         </div>
       </div>
     )
