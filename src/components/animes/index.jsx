@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { AnimeContext } from '../../context'
-import { toElipse, formatDate } from '../../services/utilsService'
-import Table from '../partials/table'
 import { Link } from 'react-router-dom'
-import { sortBy } from '../../services/utilsService'
+import { AnimeContext } from '../../context'
+import { toElipse, formatDate, sortBy } from '../../services/utilsService'
+import Table from '../partials/table'
+import auth from '../../services/authService'
 
 class Movies extends Component {
   static contextType = AnimeContext
@@ -47,13 +47,19 @@ class Movies extends Component {
             <button className="btn btn-warning btn-sm mr-1 fa fa-pencil text-white" />
           </Link>
           <button
-            onClick={() => this.context.onDelete(anime)}
+            onClick={() => this.doDelete(anime)}
             className="btn btn-danger btn-sm fa fa-trash text-white"
           />
         </React.Fragment>
       )
     }
   ]
+
+  doDelete = anime => {
+    if (!auth.isAdmin()) return this.props.history.replace('/unauthorized')
+
+    this.context.onDelete(anime)
+  }
 
   renderItemsName = items => {
     return items.map((item, i) => (

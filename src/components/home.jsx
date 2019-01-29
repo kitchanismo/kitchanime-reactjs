@@ -9,6 +9,7 @@ class Home extends Component {
 
   renderTitle = () => {
     const { state } = this.context
+
     return (
       <div className="container-fluid">
         <div className="row align-items-center">
@@ -33,7 +34,7 @@ class Home extends Component {
     return (
       <React.Fragment>
         {this.renderTitle()}
-        <Animes />
+        <Animes {...this.props} />
         <Paginate />
       </React.Fragment>
     )

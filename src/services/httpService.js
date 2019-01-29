@@ -2,9 +2,6 @@ import axios from 'axios'
 import { toast } from 'react-toastify'
 import { appUrl } from '../config.json'
 
-// const token =
-//   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTU0NzMwMzEwOX0.62iSFsOgQwDM6bsLXgUIq0ZkBV-vy4TehQn0upw2veA'
-
 axios.interceptors.response.use(null, error => {
   return throwError(error)
 })

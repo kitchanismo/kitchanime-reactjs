@@ -1,4 +1,5 @@
 import React from 'react'
+import { Redirect } from 'react-router-dom'
 import Joi from 'joi-browser'
 import Form from '../partials/form'
 import {
@@ -10,6 +11,7 @@ import {
   postAnime,
   putAnime
 } from '../../services/animeService'
+import auth from '../../services/authService'
 
 class AnimeForm extends Form {
   state = {
@@ -129,6 +131,8 @@ class AnimeForm extends Form {
   }
 
   doSubmit = async () => {
+    if (!auth.isAdmin()) return this.props.history.replace('/unauthorized')
+
     const {
       data,
       selectedGenres,

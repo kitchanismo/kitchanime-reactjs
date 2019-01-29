@@ -1,7 +1,8 @@
 import React from 'react'
+import { Redirect } from 'react-router-dom'
 import Form from './../partials/form'
 import Joi from 'joi-browser'
-import { login } from './../../services/authService'
+import auth from './../../services/authService'
 
 class LoginForm extends Form {
   state = {
@@ -23,11 +24,14 @@ class LoginForm extends Form {
 
   doSubmit = async () => {
     const user = { ...this.state.data }
-    const isAuth = await login(user)
-    console.log(isAuth)
+    await auth.login(user)
+    const { state } = this.props.location
+    window.location = state ? state.from.pathname : '/'
   }
 
   render() {
+    // if (auth.isValidUser()) return <Redirect to="/" />
+
     return (
       <div className="col-6 offset-3">
         <h1>Login</h1>

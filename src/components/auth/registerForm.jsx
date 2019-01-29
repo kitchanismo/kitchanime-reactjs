@@ -1,9 +1,9 @@
 import React from 'react'
 import Form from './../partials/form'
 import Joi from 'joi-browser'
-import { register } from './../../services/authService'
-import { isUsernameTaken, isEmailTaken } from './../../services/authService'
 import { capitalize } from './../../services/utilsService'
+import auth from './../../services/authService'
+import { Redirect } from 'react-router-dom'
 
 class RegisterForm extends Form {
   state = {
@@ -19,7 +19,7 @@ class RegisterForm extends Form {
   schema = {
     username: Joi.string()
       .required()
-      .min(3)
+      .min(6)
       .label('Username'),
     email: Joi.string()
       .required()
@@ -43,7 +43,7 @@ class RegisterForm extends Form {
 
     const user = { ...this.state.data }
 
-    await register(user)
+    await auth.register(user)
 
     const data = {
       username: '',
@@ -58,8 +58,8 @@ class RegisterForm extends Form {
   handleCheckUser = async ({ currentTarget: input }) => {
     const { isTaken } =
       input.name === 'username'
-        ? await isUsernameTaken(input.value)
-        : await isEmailTaken(input.value)
+        ? await auth.isUsernameTaken(input.value)
+        : await auth.isEmailTaken(input.value)
 
     const errors = { ...this.state.errors }
 
@@ -75,6 +75,8 @@ class RegisterForm extends Form {
   }
 
   render() {
+    // if (auth.isValidUser()) return <Redirect to="/" />
+
     return (
       <div className="col-6 offset-3">
         <h1>Register</h1>
