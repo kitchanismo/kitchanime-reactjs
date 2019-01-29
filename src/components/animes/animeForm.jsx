@@ -20,8 +20,8 @@ class AnimeForm extends Form {
       id: 0,
       title: '',
       description: '',
-      season: '',
-      type: '',
+      season: null,
+      type: null,
       genres: [],
       studios: [],
       releaseDate: ''
@@ -33,8 +33,8 @@ class AnimeForm extends Form {
     types: [],
     selectedGenres: [],
     selectedStudios: [],
-    selectedSeason: {},
-    selectedType: {}
+    selectedSeason: null,
+    selectedType: null
   }
 
   schema = {
@@ -154,7 +154,11 @@ class AnimeForm extends Form {
       ? await putAnime(anime.id, anime)
       : await postAnime(anime)
 
-    this.props.history.replace('/animes/' + id)
+    if (anime.id) {
+      this.props.history.replace('/animes/' + id)
+    } else {
+      this.props.history.replace('/')
+    }
   }
 
   handleChangeGenres = selectedGenres => this.setState({ selectedGenres })
@@ -181,7 +185,7 @@ class AnimeForm extends Form {
         <h1>{id !== 'new' ? 'Edit Form' : 'Add Form'}</h1>
         <form onSubmit={this.handleSubmit}>
           {this.renderInput('title', 'Title')}
-          {this.renderInput('description', 'Description')}
+          {this.renderTextArea('description', 'Description')}
 
           {this.renderSelect(
             'type',

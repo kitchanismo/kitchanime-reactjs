@@ -87,13 +87,14 @@ class Form extends Component {
   }
   errorMessage
 
-  renderSelect(name, label, value, onChange, options, isMulti) {
+  renderSelect(name, label, value, onChange, options, rest) {
     return (
       <div className="form-group">
         <label htmlFor={name}>{label}</label>
         <Select
-          {...isMulti}
+          {...rest}
           isSearchable
+          isClearable
           value={value}
           onChange={onChange}
           options={options}
@@ -102,7 +103,7 @@ class Form extends Component {
     )
   }
 
-  renderInput(name, label, type = 'text', onBlur) {
+  renderInput(name, label, type = 'text', rest) {
     const { data, errors } = this.state
 
     return (
@@ -113,13 +114,13 @@ class Form extends Component {
         label={label}
         onChange={this.handleChange}
         error={errors[name]}
-        {...onBlur}
+        {...rest}
       />
     )
   }
 
-  renderDatePicker(name, label, onChange) {
-    const { data } = this.state
+  renderDatePicker(name, label, rest) {
+    const { data, errors } = this.state
 
     return (
       <div className="form-group">
@@ -132,10 +133,33 @@ class Form extends Component {
             dropdownMode="select"
             placeholderText="Select a date"
             className="form-control"
-            {...onChange}
             value={data[name]}
+            {...rest}
           />
         </div>
+        {errors[name] && (
+          <div className="alert p-2 mt-2 alert-danger">{errors[name]}</div>
+        )}
+      </div>
+    )
+  }
+
+  renderTextArea(name, label, row = 3) {
+    const { data, errors } = this.state
+    return (
+      <div className="form-group">
+        <label htmlFor={name}>{label}</label>
+        <textarea
+          value={data[name]}
+          onChange={this.handleChange}
+          className="form-control"
+          id={name}
+          rows={row}
+          name={name}
+        />
+        {errors[name] && (
+          <div className="alert p-2 mt-2 alert-danger">{errors[name]}</div>
+        )}
       </div>
     )
   }
