@@ -25,7 +25,7 @@ class AnimeStore extends Component {
 
     initPage.pages = lastPage
     initPage.total = total
-
+   
     this.setState({ animes, paginate: initPage })
   }
 

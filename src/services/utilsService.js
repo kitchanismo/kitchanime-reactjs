@@ -11,9 +11,7 @@ export function toElipse(str, end = 20) {
 }
 
 export const formatDate = date => {
-  const formatedDate = new Date(date).toLocaleDateString()
-
-  return formatedDate === 'Invalid Date' ? 'N/A' : formatedDate
+  return date ? new Date(date).toLocaleDateString() : null
 }
 
 export const createArray = (start, end) => {

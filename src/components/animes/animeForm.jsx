@@ -1,6 +1,7 @@
 import React from 'react'
-import { Redirect } from 'react-router-dom'
+
 import Joi from 'joi-browser'
+import { formatDate } from '../../services/utilsService'
 import Form from '../partials/form'
 import {
   getGenres,
@@ -22,7 +23,8 @@ class AnimeForm extends Form {
       season: '',
       type: '',
       genres: [],
-      studios: []
+      studios: [],
+      releaseDate: ''
     },
     errors: {},
     genres: [],
@@ -68,19 +70,11 @@ class AnimeForm extends Form {
     this.setState({ studios })
   }
 
-  loadSeasons = () => {
-    let seasons = getSeasons()
-    this.setState({ seasons })
-  }
+  loadSeasons = () => this.setState({ seasons: getSeasons() })
 
-  loadTypes = () => {
-    let types = getTypes()
-    this.setState({ types })
-  }
+  loadTypes = () => this.setState({ types: getTypes() })
 
-  mapToModel({ id, value }) {
-    return { id, name: value }
-  }
+  mapToModel = ({ id, value }) => ({ id, name: value })
 
   loadAnime = async () => {
     try {
@@ -96,6 +90,8 @@ class AnimeForm extends Form {
         selectedSeason,
         selectedType
       } = this.mapToData(anime)
+
+      anime.releaseDate = formatDate(anime.releaseDate)
 
       this.setState({
         data: anime,
@@ -147,7 +143,12 @@ class AnimeForm extends Form {
     anime.studioIds = selectedStudios.map(s => s.id) || []
     anime.season = selectedSeason.value || ''
     anime.type = selectedType.value || ''
-    anime.releaseDate = anime.releaseDate || new Date('1/12/2019')
+
+    if (anime.releaseDate) {
+      anime.releaseDate = new Date(anime.releaseDate).toISOString()
+    } else {
+      delete anime.releaseDate
+    }
 
     const { id } = anime.id
       ? await putAnime(anime.id, anime)
@@ -156,20 +157,20 @@ class AnimeForm extends Form {
     this.props.history.replace('/animes/' + id)
   }
 
-  handleChangeGenres = selectedGenres => {
-    this.setState({ selectedGenres })
-  }
+  handleChangeGenres = selectedGenres => this.setState({ selectedGenres })
 
-  handleChangeSeason = selectedSeason => {
-    this.setState({ selectedSeason })
-  }
+  handleChangeSeason = selectedSeason => this.setState({ selectedSeason })
 
-  handleChangeType = selectedType => {
-    this.setState({ selectedType })
-  }
+  handleChangeType = selectedType => this.setState({ selectedType })
 
-  handleChangeStudios = selectedStudios => {
-    this.setState({ selectedStudios })
+  handleChangeStudios = selectedStudios => this.setState({ selectedStudios })
+
+  handleDateChange = date => {
+    const data = { ...this.state.data }
+
+    data.releaseDate = formatDate(date)
+
+    this.setState({ data })
   }
 
   render() {
@@ -190,13 +191,22 @@ class AnimeForm extends Form {
             this.state.types
           )}
 
-          {this.renderSelect(
-            'season',
-            'Season',
-            this.state.selectedSeason,
-            this.handleChangeSeason,
-            this.state.seasons
-          )}
+          <div className="row">
+            <div className="col-8">
+              {this.renderSelect(
+                'season',
+                'Season',
+                this.state.selectedSeason,
+                this.handleChangeSeason,
+                this.state.seasons
+              )}
+            </div>
+            <div className="col-4 d-flex justify-content-end">
+              {this.renderDatePicker('releaseDate', 'Release', {
+                onChange: this.handleDateChange
+              })}
+            </div>
+          </div>
 
           {this.renderSelect(
             'genreIds',

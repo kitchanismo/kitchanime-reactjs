@@ -3,6 +3,8 @@ import Joi from 'joi-browser'
 import Input from './input'
 import Select from 'react-select'
 import { capitalize } from './../../services/utilsService'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 
 class Form extends Component {
   state = {
@@ -113,6 +115,28 @@ class Form extends Component {
         error={errors[name]}
         {...onBlur}
       />
+    )
+  }
+
+  renderDatePicker(name, label, onChange) {
+    const { data } = this.state
+
+    return (
+      <div className="form-group">
+        <label htmlFor={name}>{label}</label>
+        <div>
+          <DatePicker
+            peekNextMonth
+            showMonthDropdown
+            showYearDropdown
+            dropdownMode="select"
+            placeholderText="Select a date"
+            className="form-control"
+            {...onChange}
+            value={data[name]}
+          />
+        </div>
+      </div>
     )
   }
 }
