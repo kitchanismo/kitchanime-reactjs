@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, memo } from 'react'
 import Paginate from './animes/paginate'
 import Animes from './animes/index'
 import { AnimeContext } from './../context'
@@ -39,4 +39,4 @@ const Home = props => {
   )
 }
 
-export default Home
+export default memo(Home)

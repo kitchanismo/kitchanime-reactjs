@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext, useState, useEffect, memo } from 'react'
 import { AnimeContext } from '../context'
 import { pagination } from '../config.json'
 import { sortBy } from '../services/utilsService'
@@ -20,22 +20,20 @@ const AnimeStore = props => {
   const [total, setTotal] = useState(0)
   const [paginate, setPaginate] = useState({
     pageNum: 1,
-    pages: 0,
-    total: null
+    pages: 0
   })
-
-  // n+1 issue
-  useEffect(
-    () => {
-      handleLoad()
-    },
-    [total]
-  )
 
   //initial load
   useEffect(() => {
     handleLoad()
   }, [])
+
+  // useEffect(
+  //   () => {
+  //     handleLoad()
+  //   },
+  //   [total]
+  // )
 
   const handleLoad = async () => {
     let { data: _animes, lastPage, total: _total } = await getPagedAnimes(
@@ -47,6 +45,7 @@ const AnimeStore = props => {
 
     _paginate.pages = lastPage
 
+    //
     setTotal(_total)
     setAnimes(_animes)
     setPaginate(_paginate)
@@ -120,4 +119,4 @@ const AnimeStore = props => {
   )
 }
 
-export default AnimeStore
+export default memo(AnimeStore)
