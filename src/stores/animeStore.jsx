@@ -1,7 +1,20 @@
 import React, { Component } from 'react'
 import { AnimeContext } from '../context'
-import { getPagedAnimes, deleteAnime } from '../services/animeService'
 import { pagination } from '../config.json'
+
+import { sortBy } from '../services/utilsService'
+
+import {
+  getPagedAnimes,
+  deleteAnime,
+  getAnime,
+  getStudios,
+  getGenres,
+  getSeasons,
+  getTypes,
+  putAnime,
+  postAnime
+} from '../services/animeService'
 
 class AnimeStore extends Component {
   state = {
@@ -10,10 +23,10 @@ class AnimeStore extends Component {
   }
 
   async componentDidMount() {
-    await this.initialPage()
+    await this.handleLoad()
   }
 
-  initialPage = async () => {
+  handleLoad = async () => {
     const { paginate } = this.state
 
     let { data: animes, lastPage, total } = await getPagedAnimes(
@@ -21,12 +34,12 @@ class AnimeStore extends Component {
       pagination.perPage
     )
 
-    const initPage = { ...paginate }
+    const firstPage = { ...paginate }
 
-    initPage.pages = lastPage
-    initPage.total = total
-   
-    this.setState({ animes, paginate: initPage })
+    firstPage.pages = lastPage
+    firstPage.total = total
+
+    this.setState({ animes, paginate: firstPage })
   }
 
   handlePageChange = async pageNum => {
@@ -41,7 +54,8 @@ class AnimeStore extends Component {
     this.setState({ animes, paginate })
   }
 
-  handleSet = animes => {
+  handleSort = sortColumn => {
+    const animes = sortBy(this.state.animes, sortColumn)
     this.setState({ animes })
   }
 
@@ -66,7 +80,15 @@ class AnimeStore extends Component {
           state: this.state,
           onDelete: this.handleDelete,
           onPageChange: this.handlePageChange,
-          onSet: this.handleSet
+          onSort: this.handleSort,
+          onReLoad: this.handleLoad,
+          onGetAnime: getAnime,
+          onGetStudios: getStudios,
+          onGetGenres: getGenres,
+          onGetSeasons: getSeasons,
+          onGetTypes: getTypes,
+          onPutAnime: putAnime,
+          onPostAnime: postAnime
         }}
       >
         {this.props.children}

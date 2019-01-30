@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { AnimeContext } from '../../context'
-import { toElipse, formatDate, sortBy } from '../../services/utilsService'
+import { toElipse, formatDate } from '../../services/utilsService'
 import Table from '../partials/table'
 import auth from '../../services/authService'
 
@@ -44,13 +44,15 @@ class Movies extends Component {
       label: 'Actions',
       content: anime => (
         <React.Fragment>
-          <Link to={`/animes/${anime.id}`}>
-            <button className="btn btn-warning btn-sm mr-1 fa fa-pencil text-white" />
-          </Link>
-          <button
-            onClick={() => this.doDelete(anime)}
-            className="btn btn-danger btn-sm fa fa-trash text-white"
-          />
+          <div className="d-flex justify-content-center">
+            <Link to={`/animes/${anime.id}`}>
+              <button className="btn btn-warning btn-sm mr-1 fa fa-pencil text-white" />
+            </Link>
+            <button
+              onClick={() => this.doDelete(anime)}
+              className="btn btn-danger btn-sm fa fa-trash text-white"
+            />
+          </div>
         </React.Fragment>
       )
     }
@@ -80,8 +82,7 @@ class Movies extends Component {
   }
 
   handleSort = sortColumn => {
-    const animes = sortBy(this.context.state.animes, sortColumn)
-    this.context.onSet(animes)
+    this.context.onSort(sortColumn)
     this.setState({ sortColumn })
   }
 

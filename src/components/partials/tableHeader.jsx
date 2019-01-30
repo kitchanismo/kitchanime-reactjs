@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 
 // columns: array
 // sortColumn: object
 // onSort: function
 
-class TableHeader extends Component {
+class TableHeader extends PureComponent {
   raiseSort = path => {
     const sortColumn = { ...this.props.sortColumn }
     if (sortColumn.path === path)

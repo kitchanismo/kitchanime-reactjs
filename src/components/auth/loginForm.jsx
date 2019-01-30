@@ -30,8 +30,6 @@ class LoginForm extends Form {
   }
 
   render() {
-    // if (auth.isValidUser()) return <Redirect to="/" />
-
     return (
       <div className="col-6 offset-3">
         <h1>Login</h1>

@@ -44,7 +44,7 @@ const Nav = ({ user }) => {
                 <a
                   className="nav-link disabled"
                   href="#"
-                  tabindex="-1"
+                  tabIndex="-1"
                   aria-disabled="true"
                 >
                   Disabled
@@ -53,13 +53,12 @@ const Nav = ({ user }) => {
             </ul>
           </div>
         </div>
+        <style jsx>{`
+          .navbar {
+            margin-bottom: 20px;
+          }
+        `}</style>
       </nav>
-
-      <style jsx>{`
-        .navbar {
-          margin-bottom: 20px;
-        }
-      `}</style>
     </React.Fragment>
   )
 }

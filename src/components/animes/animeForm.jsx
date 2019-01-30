@@ -1,21 +1,17 @@
 import React from 'react'
-
+import { Link } from 'react-router-dom'
 import Joi from 'joi-browser'
-import { formatDate } from '../../services/utilsService'
+
 import Form from '../partials/form'
-import {
-  getGenres,
-  getAnime,
-  getStudios,
-  getSeasons,
-  getTypes,
-  postAnime,
-  putAnime
-} from '../../services/animeService'
-import auth from '../../services/authService'
 import Spinner from './../partials/spinner'
 
+import auth from '../../services/authService'
+import { formatDate } from '../../services/utilsService'
+
+import { AnimeContext } from './../../context'
+
 class AnimeForm extends Form {
+  static contextType = AnimeContext
   state = {
     data: {
       id: 0,
@@ -53,27 +49,8 @@ class AnimeForm extends Form {
     studios: Joi.array().optional()
   }
 
-  customStyles = {
-    option: (provided, state) => ({
-      ...provided,
-      borderBottom: '1px dotted pink',
-      color: state.isSelected ? 'red' : 'blue',
-      padding: 20
-    }),
-    control: () => ({
-      // none of react-select's styles are passed to <Control />
-      width: 200
-    }),
-    singleValue: (provided, state) => {
-      const opacity = state.isDisabled ? 0.5 : 1
-      const transition = 'opacity 300ms'
-
-      return { ...provided, opacity, transition }
-    }
-  }
-
   loadGenres = async () => {
-    let { genres } = await getGenres()
+    let { genres } = await this.context.onGetGenres()
 
     genres = genres.map(g => {
       return this.mapToSelect(g)
@@ -82,7 +59,7 @@ class AnimeForm extends Form {
   }
 
   loadStudios = async () => {
-    let { studios } = await getStudios()
+    let { studios } = await this.context.onGetStudios()
 
     studios = studios.map(s => {
       return this.mapToSelect(s)
@@ -90,9 +67,9 @@ class AnimeForm extends Form {
     this.setState({ studios })
   }
 
-  loadSeasons = () => this.setState({ seasons: getSeasons() })
+  loadSeasons = () => this.setState({ seasons: this.context.onGetSeasons() })
 
-  loadTypes = () => this.setState({ types: getTypes() })
+  loadTypes = () => this.setState({ types: this.context.onGetTypes() })
 
   mapToModel = ({ id, value }) => ({ id, name: value })
 
@@ -102,7 +79,7 @@ class AnimeForm extends Form {
 
       if (id === 'new') return
 
-      let { anime } = await getAnime(id)
+      let { anime } = await this.context.onGetAnime(id)
 
       const {
         selectedGenres,
@@ -161,8 +138,8 @@ class AnimeForm extends Form {
 
     anime.genreIds = selectedGenres.map(g => g.id) || []
     anime.studioIds = selectedStudios.map(s => s.id) || []
-    anime.season = selectedSeason.value || ''
-    anime.type = selectedType.value || ''
+    anime.season = selectedSeason ? selectedSeason.value : ''
+    anime.type = selectedType ? selectedType.value : ''
 
     if (anime.releaseDate) {
       anime.releaseDate = new Date(anime.releaseDate).toISOString()
@@ -170,11 +147,13 @@ class AnimeForm extends Form {
       delete anime.releaseDate
     }
 
-    const { id } = anime.id
-      ? await putAnime(anime.id, anime)
-      : await postAnime(anime)
+    anime.id
+      ? await this.context.onPutAnime(anime.id, anime)
+      : await this.context.onPostAnime(anime)
 
-    this.props.history.replace('/')
+    this.props.history.push('/')
+
+    this.context.onReLoad()
   }
 
   handleChangeGenres = selectedGenres => this.setState({ selectedGenres })
@@ -200,6 +179,12 @@ class AnimeForm extends Form {
       <Spinner isLoaded={this.state.studios.length > 0 || id === 'new'}>
         <div className="col-8 offset-2">
           <h1>{id !== 'new' ? 'Edit Form' : 'Add Form'}</h1>
+
+          <span className=" d-flex justify-content-end">
+            <Link to="/">
+              <button className="btn fa fa-arrow-left btn-secondary btn-lg " />
+            </Link>
+          </span>
           <form onSubmit={this.handleSubmit}>
             {this.renderInput('title', 'Title')}
             {this.renderTextArea('description', 'Description')}
