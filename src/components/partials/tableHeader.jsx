@@ -4,20 +4,20 @@ import React, { PureComponent } from 'react'
 // sortColumn: object
 // onSort: function
 
-class TableHeader extends PureComponent {
-  raiseSort = path => {
-    const sortColumn = { ...this.props.sortColumn }
+const TableHeader = props => {
+  const raiseSort = path => {
+    const sortColumn = { ...props.sortColumn }
     if (sortColumn.path === path)
       sortColumn.order = sortColumn.order === 'asc' ? 'desc' : 'asc'
     else {
       sortColumn.path = path
       sortColumn.order = 'asc'
     }
-    this.props.onSort(sortColumn)
+    props.onSort(sortColumn)
   }
 
-  renderSortIcon = column => {
-    const { sortColumn } = this.props
+  const renderSortIcon = column => {
+    const { sortColumn } = props
 
     if (!column.path) return null
 
@@ -27,23 +27,21 @@ class TableHeader extends PureComponent {
     return <i className="fa fa-sort-desc" />
   }
 
-  render() {
-    return (
-      <thead className="thead-dark">
-        <tr>
-          {this.props.columns.map((column, i) => (
-            <th
-              className="clickable"
-              key={i}
-              onClick={() => this.raiseSort(column.path)}
-            >
-              {column.label} {this.renderSortIcon(column)}
-            </th>
-          ))}
-        </tr>
-      </thead>
-    )
-  }
+  return (
+    <thead className="thead-dark">
+      <tr>
+        {props.columns.map((column, i) => (
+          <th
+            className="clickable"
+            key={i}
+            onClick={() => raiseSort(column.path)}
+          >
+            {column.label} {renderSortIcon(column)}
+          </th>
+        ))}
+      </tr>
+    </thead>
+  )
 }
 
 export default TableHeader

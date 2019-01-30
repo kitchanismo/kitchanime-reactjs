@@ -1,7 +1,7 @@
 {
   "appUrl": "http://localhost:3333",
   "pagination": {
-    "perPage": 10,
-    "pageNumbers": 3
+    "perPage": 5,
+    "pageNumbers": 4
   }
 }

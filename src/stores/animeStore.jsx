@@ -1,7 +1,6 @@
-import React, { Component } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { AnimeContext } from '../context'
 import { pagination } from '../config.json'
-
 import { sortBy } from '../services/utilsService'
 
 import {
@@ -16,85 +15,109 @@ import {
   postAnime
 } from '../services/animeService'
 
-class AnimeStore extends Component {
-  state = {
-    paginate: { pageNum: 1, pages: 0, total: null },
-    animes: []
-  }
+const AnimeStore = props => {
+  const [animes, setAnimes] = useState([])
+  const [total, setTotal] = useState(0)
+  const [paginate, setPaginate] = useState({
+    pageNum: 1,
+    pages: 0,
+    total: null
+  })
 
-  async componentDidMount() {
-    await this.handleLoad()
-  }
+  // n+1 issue
+  useEffect(
+    () => {
+      handleLoad()
+    },
+    [total]
+  )
 
-  handleLoad = async () => {
-    const { paginate } = this.state
+  //initial load
+  useEffect(() => {
+    handleLoad()
+  }, [])
 
-    let { data: animes, lastPage, total } = await getPagedAnimes(
+  const handleLoad = async () => {
+    let { data: _animes, lastPage, total: _total } = await getPagedAnimes(
       paginate.pageNum,
       pagination.perPage
     )
 
-    const firstPage = { ...paginate }
+    const _paginate = { ...paginate }
 
-    firstPage.pages = lastPage
-    firstPage.total = total
+    _paginate.pages = lastPage
 
-    this.setState({ animes, paginate: firstPage })
+    setTotal(_total)
+    setAnimes(_animes)
+    setPaginate(_paginate)
   }
 
-  handlePageChange = async pageNum => {
-    const paginate = { ...this.state.paginate }
+  const handlePageChange = async pageNum => {
+    const _paginate = { ...paginate }
 
-    if (paginate.pageNum === pageNum) return
+    if (_paginate.pageNum === pageNum) return
 
-    paginate.pageNum = pageNum
+    _paginate.pageNum = pageNum
 
-    let { data: animes } = await getPagedAnimes(pageNum, pagination.perPage)
+    let { data: animes, total: _total, lastPage } = await getPagedAnimes(
+      pageNum,
+      pagination.perPage
+    )
+    _paginate.pageNum = pageNum
+    _paginate.pages = lastPage
 
-    this.setState({ animes, paginate })
+    setAnimes(animes)
+    setTotal(_total)
+    setPaginate(_paginate)
   }
 
-  handleSort = sortColumn => {
-    const animes = sortBy(this.state.animes, sortColumn)
-    this.setState({ animes })
-  }
+  const handleSort = sortColumn => setAnimes(sortBy(animes, sortColumn))
 
-  handleDelete = async anime => {
-    const originalAnimes = this.state.animes
-    const paginate = { ...this.state.paginate }
+  const handleDelete = async anime => {
+    const originalAnimes = [...animes]
+    const _paginate = { ...paginate }
     try {
-      const animes = originalAnimes.filter(a => a.id !== anime.id)
+      const filteredAnimes = originalAnimes.filter(a => a.id !== anime.id)
 
       await deleteAnime(anime.id)
-      paginate.total = paginate.total - 1
-      this.setState({ animes, paginate })
+
+      const newTotal = total - 1
+
+      if (filteredAnimes.length === 0) {
+        handlePageChange(_paginate.pageNum - 1)
+        return
+      }
+
+      setTotal(newTotal)
+      setPaginate(_paginate)
+      setAnimes(filteredAnimes)
     } catch (err) {
-      this.setState({ animes: originalAnimes, paginate })
+      setPaginate(_paginate)
+      setAnimes(originalAnimes)
+      setTotal(total)
     }
   }
 
-  render() {
-    return (
-      <AnimeContext.Provider
-        value={{
-          state: this.state,
-          onDelete: this.handleDelete,
-          onPageChange: this.handlePageChange,
-          onSort: this.handleSort,
-          onReLoad: this.handleLoad,
-          onGetAnime: getAnime,
-          onGetStudios: getStudios,
-          onGetGenres: getGenres,
-          onGetSeasons: getSeasons,
-          onGetTypes: getTypes,
-          onPutAnime: putAnime,
-          onPostAnime: postAnime
-        }}
-      >
-        {this.props.children}
-      </AnimeContext.Provider>
-    )
-  }
+  return (
+    <AnimeContext.Provider
+      value={{
+        state: { animes, paginate, total },
+        onDelete: handleDelete,
+        onPageChange: handlePageChange,
+        onSort: handleSort,
+        onReLoad: handleLoad,
+        onGetAnime: getAnime,
+        onGetStudios: getStudios,
+        onGetGenres: getGenres,
+        onGetSeasons: getSeasons,
+        onGetTypes: getTypes,
+        onPutAnime: putAnime,
+        onPostAnime: postAnime
+      }}
+    >
+      {props.children}
+    </AnimeContext.Provider>
+  )
 }
 
 export default AnimeStore
