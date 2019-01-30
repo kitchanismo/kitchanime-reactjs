@@ -23,17 +23,9 @@ const AnimeStore = props => {
     pages: 0
   })
 
-  //initial load
   useEffect(() => {
     handleLoad()
   }, [])
-
-  // useEffect(
-  //   () => {
-  //     handleLoad()
-  //   },
-  //   [total]
-  // )
 
   const handleLoad = async () => {
     let { data: _animes, lastPage, total: _total } = await getPagedAnimes(

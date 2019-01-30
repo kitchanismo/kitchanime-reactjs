@@ -1,4 +1,4 @@
-import React, { useContext, memo } from 'react'
+import React, { useContext, memo, useReducer } from 'react'
 import Paginate from './animes/paginate'
 import Animes from './animes/index'
 import { AnimeContext } from './../context'
@@ -33,6 +33,7 @@ const Home = props => {
   return (
     <Spinner isLoaded={state.animes.length > 0}>
       {renderTitle()}
+
       <Animes {...props} />
       <Paginate />
     </Spinner>
