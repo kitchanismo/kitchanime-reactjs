@@ -12,8 +12,7 @@ const useResource = (request, items, args) => {
     }
   }
   const initialState = {
-    [items]: [],
-    refresh: true
+    [items]: []
   }
   const [state, dispatch] = useReducer(reducer, initialState)
 
