@@ -29,9 +29,10 @@ const Nav = () => {
             <ul className="navbar-nav">
               {auth.isValidUser() && (
                 <React.Fragment>
+                  <i className="fa fa-user  text-warning" />
                   <li className="nav-item">
                     <NavLink className="nav-link active" to="/home">
-                      {'Welcome, ' + capitalize(auth.getCurrentUser().username)}
+                      {capitalize(auth.getCurrentUser().username)}
                     </NavLink>
                   </li>
                   <li className="nav-item">
@@ -66,6 +67,9 @@ const Nav = () => {
         <style jsx>{`
           .navbar {
             margin-bottom: 20px;
+          }
+          .fa-user {
+            margin-top: 12px !important;
           }
         `}</style>
       </nav>

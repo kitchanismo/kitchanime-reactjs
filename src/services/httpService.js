@@ -46,6 +46,7 @@ function throwError(error) {
     error.response.status < 500
   if (!expectedError) {
     toast.error('An unexpected error occurrred.')
+    setJwt({ token: '', refreshToken: '' })
   }
 
   return Promise.reject(error)
