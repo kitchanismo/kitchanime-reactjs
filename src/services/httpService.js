@@ -6,28 +6,17 @@ axios.interceptors.response.use(null, error => {
   return throwError(error)
 })
 
-axios.interceptors.request.use(
-  config => {
-    config.baseURL = appUrl
-
-    return config
-  },
-  error => {
-    return throwError(error)
-  }
-)
+axios.interceptors.request.use(config => {
+  config.baseURL = appUrl
+  return config
+})
 
 function setJwt({ token }) {
-  axios.interceptors.request.use(
-    config => {
-      config.headers.Authorization = `Bearer ${token}`
+  axios.interceptors.request.use(config => {
+    config.headers.Authorization = `Bearer ${token}`
 
-      return config
-    },
-    error => {
-      return throwError(error)
-    }
-  )
+    return config
+  })
 }
 
 export default {
