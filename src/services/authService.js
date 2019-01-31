@@ -7,10 +7,9 @@ function saveJwt({ token, refreshToken }) {
 }
 
 async function login(user) {
-  const { jwt } = await http.post('/auth/login', user).then(data => data.data)
-  if (!jwt) return false
-  saveJwt(jwt)
-  return true
+  return await http.post('/auth/login', user).then(data => {
+    saveJwt(data.data.jwt)
+  })
 }
 
 async function register(user) {

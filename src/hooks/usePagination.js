@@ -1,17 +1,18 @@
 import { useEffect, useReducer } from 'react'
-
-export const FETCH_ITEMS = 'FETCH_ITEMS' // array
-export const SET_PAGENUM = 'SET_PAGENUM' // number, active page
-export const SET_PAGES = 'SET_PAGES' // number, total no. of pages
-export const SET_TOTAL = 'SET_TOTAL' // number, total no. of items
-export const SET_REFRESH = 'SET_REFRESH' // boolean, do reload page
+import {
+  SET_ITEMS,
+  SET_PAGENUM,
+  SET_PAGES,
+  SET_TOTAL,
+  SET_REFRESH
+} from './types'
 
 const reducer = (state, action) => {
   const { payload, type } = action
   switch (type) {
     case SET_PAGENUM:
       return { ...state, pageNum: payload }
-    case FETCH_ITEMS:
+    case SET_ITEMS:
       return { ...state, items: payload }
     case SET_PAGES:
       return { ...state, pages: payload }
@@ -54,10 +55,10 @@ const usePagination = ({
     () => {
       if (refresh) {
         request(pageNum, take).then(response => {
-          dispatch({ type: 'FETCH_ITEMS', payload: response[items] })
-          dispatch({ type: 'SET_PAGES', payload: response[pages] })
-          dispatch({ type: 'SET_TOTAL', payload: response[total] })
-          dispatch({ type: 'SET_REFRESH', refresh: false })
+          dispatch({ type: SET_ITEMS, payload: response[items] })
+          dispatch({ type: SET_PAGES, payload: response[pages] })
+          dispatch({ type: SET_TOTAL, payload: response[total] })
+          dispatch({ type: SET_REFRESH, refresh: false })
         })
       }
     },

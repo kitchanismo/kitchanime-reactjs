@@ -5,6 +5,7 @@ import Table from '../partials/table'
 
 import { formatDate } from '../../services/utilsService'
 import auth from '../../services/authService'
+import { toast } from 'react-toastify'
 
 const Animes = props => {
   const {
@@ -56,7 +57,10 @@ const Animes = props => {
   ]
 
   const doDelete = anime => {
-    if (!auth.isAdmin()) return props.history.replace('/unauthorized')
+    if (!auth.isAdmin()) {
+      toast.error('Unauthorized user')
+      return
+    }
 
     onDelete(anime)
   }

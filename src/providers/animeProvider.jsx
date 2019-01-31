@@ -1,14 +1,12 @@
-import React, { useContext, useState, useEffect, memo } from 'react'
+import React, { memo } from 'react'
 import { AnimeContext } from '../context'
 import { pagination } from '../config.json'
 import { sortBy } from '../services/utilsService'
 import { getPagedAnimes } from '../services/animeService'
 
-import usePagination, {
-  FETCH_ITEMS,
-  SET_PAGENUM,
-  SET_REFRESH
-} from '../hooks/usePagination'
+import usePagination from '../hooks/usePagination'
+
+import { SET_ITEMS, SET_PAGENUM, SET_REFRESH } from '../hooks/types'
 
 import {
   deleteAnime,
@@ -35,7 +33,7 @@ const AnimeProvider = props => {
   }
 
   const handleSort = sortColumn => {
-    dispatch({ type: FETCH_ITEMS, payload: sortBy(animes, sortColumn) })
+    dispatch({ type: SET_ITEMS, payload: sortBy(animes, sortColumn) })
   }
 
   const handleDelete = async anime => {
@@ -59,6 +57,7 @@ const AnimeProvider = props => {
     <AnimeContext.Provider
       value={{
         state: { animes, paginate: { pages, pageNum }, total },
+        dispatch,
         onDelete: handleDelete,
         onPageChange: handlePageChange,
         onSort: handleSort,

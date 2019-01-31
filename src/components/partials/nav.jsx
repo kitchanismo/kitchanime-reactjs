@@ -1,14 +1,16 @@
 import React from 'react'
 import { Link, NavLink } from 'react-router-dom'
+import auth from '../../services/authService'
+import { capitalize } from '../../services/utilsService'
 
-const Nav = ({ user }) => {
+const Nav = () => {
   return (
     <React.Fragment>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="container">
-          <a className="navbar-brand" href="#">
+          <Link className="navbar-brand" to="/">
             KITCHANIME
-          </a>
+          </Link>
           <button
             className="navbar-toggler"
             type="button"
@@ -25,31 +27,39 @@ const Nav = ({ user }) => {
             id="navbarNav"
           >
             <ul className="navbar-nav">
-              <li className="nav-item active">
-                <a className="nav-link" href="#">
-                  Animes <span className="sr-only">(current)</span>
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#">
-                  Features
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#">
-                  Pricing
-                </a>
-              </li>
-              <li className="nav-item">
-                <a
-                  className="nav-link disabled"
-                  href="#"
-                  tabIndex="-1"
-                  aria-disabled="true"
-                >
-                  Disabled
-                </a>
-              </li>
+              {auth.isValidUser() && (
+                <React.Fragment>
+                  <li className="nav-item">
+                    <NavLink className="nav-link active" to="/home">
+                      {'Welcome, ' + capitalize(auth.getCurrentUser().username)}
+                    </NavLink>
+                  </li>
+                  <li className="nav-item">
+                    <NavLink
+                      className="nav-link"
+                      to="/login"
+                      onClick={() => auth.logout()}
+                    >
+                      Logout
+                    </NavLink>
+                  </li>
+                </React.Fragment>
+              )}
+
+              {!auth.isValidUser() && (
+                <React.Fragment>
+                  <li className="nav-item">
+                    <NavLink className="nav-link" to="/login">
+                      Login
+                    </NavLink>
+                  </li>
+                  <li className="nav-item">
+                    <NavLink className="nav-link" to="/register">
+                      Register
+                    </NavLink>
+                  </li>
+                </React.Fragment>
+              )}
             </ul>
           </div>
         </div>

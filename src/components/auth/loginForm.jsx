@@ -1,8 +1,9 @@
 import React from 'react'
-import { Redirect } from 'react-router-dom'
 import Form from './../partials/form'
 import Joi from 'joi-browser'
 import auth from './../../services/authService'
+import { capitalize } from '../../services/utilsService'
+import { toast } from 'react-toastify'
 
 class LoginForm extends Form {
   state = {
@@ -24,13 +25,18 @@ class LoginForm extends Form {
 
   doSubmit = async () => {
     const user = { ...this.state.data }
-    await auth.login(user)
-    // const { state } = this.props.location
-    // window.location = state ? state.from.pathname : '/'
-    this.props.history.replace('/')
+    try {
+      await auth.login(user)
+      toast.success(`Welcome, ${capitalize(user.username)}`)
+      this.props.history.replace('/home')
+    } catch (err) {
+      toast.error('Invalid username or password')
+    }
   }
 
   render() {
+    const { invalidUser } = this.state.errors
+    console.log('hit render')
     return (
       <div className="col-6 offset-3">
         <h1>Login</h1>

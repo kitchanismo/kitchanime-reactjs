@@ -53,6 +53,7 @@ class RegisterForm extends Form {
     }
 
     this.setState({ data, errors })
+    this.props.history.replace('/')
   }
 
   handleCheckUser = async ({ currentTarget: input }) => {

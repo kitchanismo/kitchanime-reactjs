@@ -33,7 +33,6 @@ const Home = props => {
   return (
     <Spinner isLoaded={state.animes.length > 0}>
       {renderTitle()}
-
       <Animes {...props} />
       <Paginate />
     </Spinner>

@@ -2,10 +2,11 @@ import React, { useContext, useState, useEffect } from 'react'
 import { AnimeContext } from '../../context'
 import { createArray } from '../../services/utilsService'
 import { pagination } from '../../config.json'
+import { SET_PAGENUM, SET_REFRESH } from '../../hooks/types'
 
 const Paginate = props => {
   const {
-    onPageChange,
+    dispatch,
     state: { paginate }
   } = useContext(AnimeContext)
 
@@ -13,7 +14,7 @@ const Paginate = props => {
   const [end, setEnd] = useState(pagination.pageNumbers)
 
   const doNext = pageNum => {
-    onPageChange(pageNum + 1)
+    handlePageChange(pageNum + 1)
     if (end === paginate.pages) return
     setStart(start + 1)
     setEnd(end + 1)
@@ -30,8 +31,13 @@ const Paginate = props => {
     [paginate]
   )
 
+  const handlePageChange = _pageNum => {
+    dispatch({ type: SET_PAGENUM, payload: _pageNum })
+    dispatch({ type: SET_REFRESH, payload: true })
+  }
+
   const doPrev = pageNum => {
-    onPageChange(pageNum - 1)
+    handlePageChange(pageNum - 1)
 
     if (start === 1) return
     setStart(start - 1)
@@ -48,7 +54,7 @@ const Paginate = props => {
           pageNum === paginate.pageNum ? 'page-item active' : 'page-item'
         }
       >
-        <button className="page-link" onClick={() => onPageChange(pageNum)}>
+        <button className="page-link" onClick={() => handlePageChange(pageNum)}>
           {pageNum}
         </button>
       </li>
@@ -80,7 +86,7 @@ const Paginate = props => {
             className="page-link"
             onClick={() => {
               if (paginate.pageNum === 1) return
-              onPageChange(1)
+              handlePageChange(1)
               setStart(1)
               setEnd(pagination.pageNumbers)
             }}
@@ -119,7 +125,7 @@ const Paginate = props => {
           <button
             className="page-link"
             onClick={() => {
-              onPageChange(paginate.pages)
+              handlePageChange(paginate.pages)
               setStart(paginate.pages - (pagination.pageNumbers - 1))
               setEnd(paginate.pages)
             }}

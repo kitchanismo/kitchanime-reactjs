@@ -1,7 +1,7 @@
 import React, { memo, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Joi from 'joi-browser'
-
+import { toast } from 'react-toastify'
 import Form from '../partials/form'
 import Spinner from './../partials/spinner'
 
@@ -124,7 +124,11 @@ class AnimeForm extends Form {
   }
 
   doSubmit = async () => {
-    if (!auth.isAdmin()) return this.props.history.replace('/unauthorized')
+    if (!auth.isAdmin()) {
+      toast.error('Unauthorized user')
+      console.log(toast)
+      return
+    }
 
     const {
       data,
@@ -150,6 +154,8 @@ class AnimeForm extends Form {
     anime.id
       ? await this.context.onPutAnime(anime.id, anime)
       : await this.context.onPostAnime(anime)
+
+    anime.id ? toast.success('Updated') : toast.success('Added')
 
     this.props.history.push('/')
 
