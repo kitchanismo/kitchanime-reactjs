@@ -17,23 +17,20 @@ import {
 
 const AnimeProvider = props => {
   const {
-    animes,
-    total,
-    pageNum,
-    pages,
-    setPageNum,
-    setAnimes,
-    setRefresh
+    state: { pageNum, animes, pages, total },
+    dispatch
   } = useAnimes(pagination.perPage)
 
   const handlePageChange = async _pageNum => {
     if (pageNum === _pageNum) return
 
-    setPageNum(_pageNum)
-    setRefresh(true)
+    handlePageNum(_pageNum)
+    handleReload()
   }
 
-  const handleSort = sortColumn => setAnimes(sortBy(animes, sortColumn))
+  const handleSort = sortColumn => {
+    dispatch({ type: 'FETCH_ANIMES', payload: sortBy(animes, sortColumn) })
+  }
 
   const handleDelete = async anime => {
     await deleteAnime(anime.id)
@@ -41,13 +38,16 @@ const AnimeProvider = props => {
     if (animes.length === 1) {
       const _pageNum = pageNum - 1
       handlePageChange(_pageNum)
-      setPageNum(_pageNum)
+      handlePageNum(_pageNum)
       return
     }
-    setRefresh(true)
+    handleReload()
   }
 
-  const handleReload = () => setRefresh(new Date())
+  const handlePageNum = pageNum =>
+    dispatch({ type: 'SET_PAGENUM', payload: pageNum })
+
+  const handleReload = () => dispatch({ type: 'SET_REFRESH', payload: true })
 
   return (
     <AnimeContext.Provider
