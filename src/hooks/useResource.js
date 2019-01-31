@@ -7,6 +7,7 @@ const useResource = (request, items, args) => {
     switch (type) {
       case SET_ITEMS:
         return { ...state, [items]: payload }
+      default:
         return state
     }
   }
