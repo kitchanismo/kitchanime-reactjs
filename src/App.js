@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import AnimeStore from './stores/animeStore'
+import AnimeProvider from './providers/animeProvider'
 import Nav from './components/partials/nav'
 import Routes from './routes'
 
@@ -11,11 +11,11 @@ class App extends Component {
     return (
       <React.Fragment>
         <Nav />
-        <AnimeStore>
+        <AnimeProvider>
           <main className="container">
             <Routes />
           </main>
-        </AnimeStore>
+        </AnimeProvider>
       </React.Fragment>
     )
   }

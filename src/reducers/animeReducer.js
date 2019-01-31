@@ -1,14 +1,9 @@
-import http from '../services/httpService'
 
-export default async (state, action) => {
-  const { num, limit } = action.payload
-
+export default  (state, action) => {
   switch (action.type) {
-    case 'FETCH_ANIMES':
-      const data = await http
-        .get(`/api/animes/page/${num}?limit=${limit}`)
-        .then(response => response.data.data)
-      return { ...state, animes: data }
+    case 'FETCH_ANIMES':{
+      return {...state, ...action.payload}
+    }
     default: {
       return state
     }

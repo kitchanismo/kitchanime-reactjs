@@ -25,8 +25,9 @@ class LoginForm extends Form {
   doSubmit = async () => {
     const user = { ...this.state.data }
     await auth.login(user)
-    const { state } = this.props.location
-    window.location = state ? state.from.pathname : '/'
+    // const { state } = this.props.location
+    // window.location = state ? state.from.pathname : '/'
+    this.props.history.replace('/')
   }
 
   render() {

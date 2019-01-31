@@ -6,7 +6,7 @@ import Table from '../partials/table'
 import { formatDate } from '../../services/utilsService'
 import auth from '../../services/authService'
 
-const Movies = props => {
+const Animes = props => {
   const {
     state: { animes },
     onSort,
@@ -94,4 +94,4 @@ const Movies = props => {
   )
 }
 
-export default Movies
+export default Animes

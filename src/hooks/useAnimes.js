@@ -1,32 +1,38 @@
 import { useState, useEffect } from 'react'
-import http from '../services/httpService'
+import { getPagedAnimes } from '../services/animeService'
 
-const useAnimes = (num, limit) => {
+const useAnimes = (initLimit = 5) => {
   const [animes, setAnimes] = useState([])
   const [total, setTotal] = useState(0)
-  const [paginate, setPaginate] = useState({
-    pageNum: 1,
-    pages: 0
-  })
-  useEffect(
-    () => {
-      ;(async (num, limit) => {
-        const { data, lastPage, total } = await http
-          .get(`/api/animes/page/${num}?limit=${limit}`)
-          .then(data => data.data.data)
+  const [refresh, setRefresh] = useState(true)
+  const [pages, setPages] = useState(0)
+  const [pageNum, setPageNum] = useState(1)
+  const [limit, setLimit] = useState(initLimit)
 
-        const _paginate = { ...paginate }
-        _paginate.pages = lastPage
+  useEffect(
+    async () => {
+      if (refresh) {
+        const { data, total, lastPage } = await getPagedAnimes(pageNum, limit)
 
         setAnimes(data)
+        setPages(lastPage)
         setTotal(total)
-        setPaginate(_paginate)
-      })(num, limit)
+        setRefresh(false)
+      }
     },
-    [num, limit]
+    [refresh]
   )
 
-  return { animes, total, paginate, setAnimes, setTotal, setPaginate }
+  return {
+    animes,
+    total,
+    pageNum,
+    pages,
+    setPageNum,
+    setLimit,
+    setAnimes,
+    setRefresh
+  }
 }
 
 export default useAnimes
