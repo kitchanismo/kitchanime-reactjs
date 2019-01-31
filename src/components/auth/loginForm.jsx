@@ -35,8 +35,6 @@ class LoginForm extends Form {
   }
 
   render() {
-    const { invalidUser } = this.state.errors
-    console.log('hit render')
     return (
       <div className="col-6 offset-3">
         <h1>Login</h1>

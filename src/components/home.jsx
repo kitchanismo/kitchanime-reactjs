@@ -4,6 +4,7 @@ import Animes from './animes/index'
 import { AnimeContext } from './../context'
 import { Link } from 'react-router-dom'
 import Spinner from './partials/spinner'
+import auth from '../services/authService'
 
 const Home = props => {
   const { state } = useContext(AnimeContext)
@@ -21,11 +22,13 @@ const Home = props => {
             </span>
           </h5>
         </div>
-        <div className="col d-flex justify-content-end">
-          <Link to="/animes/new">
-            <button className="btn fa fa-plus btn-success btn-lg " />
-          </Link>
-        </div>
+        {auth.isAdmin() && (
+          <div className="col d-flex justify-content-end">
+            <Link to="/animes/new">
+              <button className="btn fa fa-plus btn-success btn-lg " />
+            </Link>
+          </div>
+        )}
       </div>
     )
   }

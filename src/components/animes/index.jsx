@@ -88,9 +88,16 @@ const Animes = props => {
     setSortColumn(sortColumn)
   }
 
+  const withColumnActions = () => {
+    if (auth.isAdmin()) return columns
+
+    const _columns = [...columns]
+    return _columns.filter(c => c.key !== 'actions')
+  }
+
   return (
     <Table
-      columns={columns}
+      columns={withColumnActions()}
       data={transformAnimes()}
       sortColumn={sortColumn}
       onSort={handleSort}

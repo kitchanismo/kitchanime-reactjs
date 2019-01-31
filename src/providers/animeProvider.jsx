@@ -59,7 +59,6 @@ const AnimeProvider = props => {
         state: { animes, paginate: { pages, pageNum }, total },
         dispatch,
         onDelete: handleDelete,
-        onPageChange: handlePageChange,
         onSort: handleSort,
         onReLoad: handleReload,
         onGetAnime: getAnime,

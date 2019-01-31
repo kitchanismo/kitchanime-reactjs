@@ -43,16 +43,16 @@ export function getTypes() {
 }
 
 export function postAnime(anime) {
-  http.setJwt(auth.jwt)
+  http.setJwt(auth.jwt())
   return http.post('/api/animes', anime).then(data => data.data)
 }
 
 export function putAnime(id, anime) {
-  http.setJwt(auth.jwt)
+  http.setJwt(auth.jwt())
   return http.put('/api/animes/' + id, anime).then(data => data.data)
 }
 
 export function deleteAnime(id) {
-  http.setJwt(auth.jwt)
+  http.setJwt(auth.jwt())
   return http.delete('/api/animes/' + id).then(data => data.data)
 }

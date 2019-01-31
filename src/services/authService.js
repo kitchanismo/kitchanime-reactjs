@@ -52,9 +52,11 @@ function isEmailTaken(email) {
   return http.get('/auth/is-taken?email=' + email).then(data => data.data)
 }
 
-const jwt = {
-  token: localStorage.getItem('access-token'),
-  refreshToken: localStorage.getItem('refresh-token')
+const jwt = () => {
+  return {
+    token: localStorage.getItem('access-token'),
+    refreshToken: localStorage.getItem('refresh-token')
+  }
 }
 
 export default {
