@@ -2,7 +2,13 @@ import React, { useContext, useState, useEffect, memo } from 'react'
 import { AnimeContext } from '../context'
 import { pagination } from '../config.json'
 import { sortBy } from '../services/utilsService'
-import useAnimes from '../hooks/useAnimes'
+import { getPagedAnimes } from '../services/animeService'
+
+import usePagination, {
+  FETCH_ITEMS,
+  SET_PAGENUM,
+  SET_REFRESH
+} from '../hooks/usePagination'
 
 import {
   deleteAnime,
@@ -17,9 +23,9 @@ import {
 
 const AnimeProvider = props => {
   const {
-    state: { pageNum, animes, pages, total },
+    state: { pageNum, items: animes, pages, total },
     dispatch
-  } = useAnimes(pagination.perPage)
+  } = usePagination({ request: getPagedAnimes, take: pagination.perPage })
 
   const handlePageChange = async _pageNum => {
     if (pageNum === _pageNum) return
@@ -29,7 +35,7 @@ const AnimeProvider = props => {
   }
 
   const handleSort = sortColumn => {
-    dispatch({ type: 'FETCH_ANIMES', payload: sortBy(animes, sortColumn) })
+    dispatch({ type: FETCH_ITEMS, payload: sortBy(animes, sortColumn) })
   }
 
   const handleDelete = async anime => {
@@ -45,9 +51,9 @@ const AnimeProvider = props => {
   }
 
   const handlePageNum = pageNum =>
-    dispatch({ type: 'SET_PAGENUM', payload: pageNum })
+    dispatch({ type: SET_PAGENUM, payload: pageNum })
 
-  const handleReload = () => dispatch({ type: 'SET_REFRESH', payload: true })
+  const handleReload = () => dispatch({ type: SET_REFRESH, payload: true })
 
   return (
     <AnimeContext.Provider
