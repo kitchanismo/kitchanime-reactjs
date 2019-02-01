@@ -27,13 +27,14 @@ const reducer = (state, action) => {
 
 // customize the properties of response data in the usePagination arguments
 //
+//
 // consume usePagination e.g.
 // const { state: { items: movies, pageNum, pages, total }, dispatch}
-// = usePagination({ request: getMovies, take: 10, total: 'count', pages: 'pagesCount', items: 'movies' })
+// = usePagination({ request: getMovies, take: 10, total: 'count', pages: 'pagesCount', data: 'movies' })
 
 const usePagination = ({
   request,
-  items = 'data',
+  data = 'data',
   pages = 'lastPage',
   total = 'total',
   take = 15
@@ -44,7 +45,7 @@ const usePagination = ({
     pages: 0,
     total: 0,
     take,
-    refresh: true
+    refresh: null
   }
   const [{ refresh, pageNum, ...rest }, dispatch] = useReducer(
     reducer,
@@ -53,20 +54,17 @@ const usePagination = ({
 
   useEffect(
     () => {
-      if (refresh) {
-        request(pageNum, take).then(response => {
-          dispatch({ type: SET_ITEMS, payload: response[items] })
-          dispatch({ type: SET_PAGES, payload: response[pages] })
-          dispatch({ type: SET_TOTAL, payload: response[total] })
-          dispatch({ type: SET_REFRESH, refresh: false })
-        })
-      }
+      request(pageNum, take).then(response => {
+        dispatch({ type: SET_ITEMS, payload: response[data] })
+        dispatch({ type: SET_PAGES, payload: response[pages] })
+        dispatch({ type: SET_TOTAL, payload: response[total] })
+      })
     },
-    [refresh]
+    [refresh, pageNum]
   )
 
   return {
-    state: { refresh, pageNum, take, ...rest },
+    state: { pageNum, take, ...rest },
     dispatch
   }
 }

@@ -29,7 +29,6 @@ const AnimeProvider = props => {
     if (pageNum === _pageNum) return
 
     handlePageNum(_pageNum)
-    handleReload()
   }
 
   const handleSort = sortColumn => {
@@ -37,21 +36,24 @@ const AnimeProvider = props => {
   }
 
   const handleDelete = async anime => {
+    let _animes = [...animes]
+
+    _animes = _animes.filter(a => a.id !== anime.id)
+
+    dispatch({ type: SET_ITEMS, payload: _animes })
+
     await deleteAnime(anime.id)
 
-    if (animes.length === 1) {
+    if (_animes.length === 1) {
       const _pageNum = pageNum - 1
       handlePageChange(_pageNum)
-      handlePageNum(_pageNum)
       return
     }
-    handleReload()
+    dispatch({ type: SET_REFRESH, payload: new Date() })
   }
 
   const handlePageNum = pageNum =>
     dispatch({ type: SET_PAGENUM, payload: pageNum })
-
-  const handleReload = () => dispatch({ type: SET_REFRESH, payload: true })
 
   return (
     <AnimeContext.Provider
@@ -60,7 +62,6 @@ const AnimeProvider = props => {
         dispatch,
         onDelete: handleDelete,
         onSort: handleSort,
-        onReLoad: handleReload,
         onGetAnime: getAnime,
         onGetStudios: getStudios,
         onGetGenres: getGenres,

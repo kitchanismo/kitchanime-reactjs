@@ -9,6 +9,7 @@ import auth from '../../services/authService'
 import { formatDate } from '../../services/utilsService'
 
 import { AnimeContext } from './../../context'
+import { SET_REFRESH } from './../../hooks/types'
 
 class AnimeForm extends Form {
   static contextType = AnimeContext
@@ -159,7 +160,7 @@ class AnimeForm extends Form {
 
     this.props.history.push('/')
 
-    this.context.onReLoad()
+    this.context.dispatch({ type: SET_REFRESH, payload: new Date() })
   }
 
   handleChangeGenres = selectedGenres => this.setState({ selectedGenres })

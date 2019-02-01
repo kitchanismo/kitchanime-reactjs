@@ -34,7 +34,6 @@ const Paginate = props => {
   const handlePageChange = _pageNum => {
     if (paginate.pageNum === _pageNum) return
     dispatch({ type: SET_PAGENUM, payload: _pageNum })
-    dispatch({ type: SET_REFRESH, payload: true })
   }
 
   const doPrev = pageNum => {
