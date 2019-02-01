@@ -12,7 +12,7 @@ import { deleteAnime } from '../../services/animeService'
 
 const Animes = props => {
   const {
-    state: { animes, pages },
+    state: { animes, pageNum },
     dispatch
   } = useContext(AnimeContext)
 
@@ -74,7 +74,6 @@ const Animes = props => {
 
     if (_animes.length === 0) {
       dispatch({ type: SET_PAGENUM, payload: 1 })
-      return
     }
     dispatch({ type: SET_REFRESH, payload: new Date() })
   }

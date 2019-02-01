@@ -5,9 +5,9 @@ export function getAnimes() {
   return http.get('/api/animes').then(data => data.data)
 }
 
-export function getPagedAnimes(num, limit) {
+export function getPagedAnimes(num, limit, title = '') {
   return http
-    .get(`/api/animes/page/${num}?limit=${limit}`)
+    .get(`/api/animes/page/${num}?limit=${limit}&title=${title}`)
     .then(data => data.data.data)
 }
 

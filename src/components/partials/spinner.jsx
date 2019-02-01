@@ -10,6 +10,7 @@ const Spinner = ({ isLoaded, children }) => {
           </div>
         </div>
       )}
+
       {isLoaded && children}
       <style jsx>{`
         .spin {

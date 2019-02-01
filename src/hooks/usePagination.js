@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from 'react'
+import { useEffect, useReducer, useRef } from 'react'
 import {
   SET_ITEMS,
   SET_PAGENUM,
@@ -20,6 +20,8 @@ const reducer = (state, action) => {
       return { ...state, total: payload }
     case SET_REFRESH:
       return { ...state, refresh: payload }
+    case 'SEARCH_TITLE':
+      return { ...state, title: payload }
     default:
       return state
   }
@@ -47,20 +49,27 @@ const usePagination = ({
     take,
     refresh: null
   }
-  const [{ refresh, pageNum, ...rest }, dispatch] = useReducer(
+  const [{ refresh, title, pageNum, ...rest }, dispatch] = useReducer(
     reducer,
     initialState
   )
 
   useEffect(
     () => {
-      request(pageNum, take).then(response => {
-        dispatch({ type: SET_ITEMS, payload: response[data] })
-        dispatch({ type: SET_PAGES, payload: response[pages] })
-        dispatch({ type: SET_TOTAL, payload: response[total] })
-      })
+      request(pageNum, take, title)
+        .then(response => {
+          dispatch({ type: SET_ITEMS, payload: response[data] })
+          dispatch({ type: SET_PAGES, payload: response[pages] })
+          dispatch({ type: SET_TOTAL, payload: response[total] })
+        })
+        .catch(error => {
+          dispatch({ type: SET_ITEMS, payload: [] })
+          dispatch({ type: SET_PAGES, payload: 0 })
+          dispatch({ type: SET_TOTAL, payload: 0 })
+          dispatch({ type: SET_PAGENUM, payload: 0 })
+        })
     },
-    [refresh, pageNum]
+    [refresh, title]
   )
 
   return {
