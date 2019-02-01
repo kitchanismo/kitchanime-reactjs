@@ -3,7 +3,7 @@ import Joi from 'joi-browser'
 import auth from './../../services/authService'
 import { capitalize } from '../../services/utilsService'
 import { toast } from 'react-toastify'
-import FormHooks from '../partials/formHooks'
+import Form from '../partials/form'
 
 const LoginForm = props => {
   const [user, setUser] = useState({ username: '', password: '' })
@@ -31,13 +31,13 @@ const LoginForm = props => {
   return (
     <div className="col-6 offset-3">
       <h1>Login</h1>
-      <FormHooks
+      <Form
         data={{ data: user, setData: setUser }}
         errors={{ errors, setErrors }}
         onSubmit={handleSubmit}
         schema={schema}
       >
-        {(renderButton, renderInput) => {
+        {({ renderButton, renderInput }) => {
           return (
             <React.Fragment>
               {renderInput('username', 'Username')}
@@ -46,7 +46,7 @@ const LoginForm = props => {
             </React.Fragment>
           )
         }}
-      </FormHooks>
+      </Form>
     </div>
   )
 }

@@ -1,8 +1,7 @@
-import React, { memo, useEffect } from 'react'
+import React, { memo, useEffect, useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import Joi from 'joi-browser'
 import { toast } from 'react-toastify'
-import Form from '../partials/form'
 import Spinner from './../partials/spinner'
 
 import auth from '../../services/authService'
@@ -10,32 +9,32 @@ import { formatDate } from '../../services/utilsService'
 
 import { AnimeContext } from './../../context'
 import { SET_REFRESH } from './../../hooks/types'
+import Form, { mapToSelect } from '../partials/form'
 
-class AnimeForm extends Form {
-  static contextType = AnimeContext
-  state = {
-    data: {
-      id: 0,
-      title: '',
-      description: '',
-      season: null,
-      type: null,
-      genres: [],
-      studios: [],
-      releaseDate: ''
-    },
-    errors: {},
+const AnimeForm = props => {
+  const context = useContext(AnimeContext)
+
+  const [anime, setAnime] = useState({
+    id: 0,
+    title: '',
+    description: '',
+    season: null,
+    type: null,
     genres: [],
     studios: [],
-    seasons: [],
-    types: [],
-    selectedGenres: [],
-    selectedStudios: [],
-    selectedSeason: null,
-    selectedType: null
-  }
+    releaseDate: ''
+  })
+  const [errors, setErrors] = useState({})
+  const [genres, setGenres] = useState([])
+  const [studios, setStudios] = useState([])
+  const [seasons, setSeasons] = useState([])
+  const [types, setTypes] = useState([])
+  const [selectedGenres, setSelectedGenres] = useState([])
+  const [selectedStudios, setSelectedStudios] = useState([])
+  const [selectedSeason, setSelectedSeason] = useState(null)
+  const [selectedType, setSelectedType] = useState(null)
 
-  schema = {
+  const schema = {
     id: Joi.number().integer(),
     title: Joi.string()
       .min(3)
@@ -50,201 +49,207 @@ class AnimeForm extends Form {
     studios: Joi.array().optional()
   }
 
-  loadGenres = async () => {
-    let { genres } = await this.context.onGetGenres()
+  const loadGenres = async () => {
+    let { genres } = await context.onGetGenres()
 
     genres = genres.map(g => {
-      return this.mapToSelect(g)
+      return mapToSelect(g)
     })
-    this.setState({ genres })
+    setGenres(genres)
   }
 
-  loadStudios = async () => {
-    let { studios } = await this.context.onGetStudios()
+  const loadStudios = async () => {
+    let { studios } = await context.onGetStudios()
 
     studios = studios.map(s => {
-      return this.mapToSelect(s)
+      return mapToSelect(s)
     })
-    this.setState({ studios })
+    setStudios(studios)
   }
 
-  loadSeasons = () => this.setState({ seasons: this.context.onGetSeasons() })
+  const loadSeasons = () => setSeasons(context.onGetSeasons())
 
-  loadTypes = () => this.setState({ types: this.context.onGetTypes() })
+  const loadTypes = () => setTypes(context.onGetTypes())
 
-  mapToModel = ({ id, value }) => ({ id, name: value })
+  const mapToModel = ({ id, value }) => ({ id, name: value })
 
-  loadAnime = async () => {
+  const loadAnime = async () => {
     try {
-      const id = this.props.match.params.id
+      const id = props.match.params.id
 
       if (id === 'new') return
 
-      let { anime } = await this.context.onGetAnime(id)
+      let { anime } = await context.onGetAnime(id)
 
       const {
         selectedGenres,
         selectedStudios,
         selectedSeason,
         selectedType
-      } = this.mapToData(anime)
+      } = mapToData(anime)
 
       anime.releaseDate = formatDate(anime.releaseDate)
 
-      this.setState({
-        data: anime,
-        selectedGenres,
-        selectedStudios,
-        selectedSeason,
-        selectedType
-      })
+      setAnime(anime)
+      setSelectedGenres(selectedGenres)
+      setSelectedStudios(selectedStudios)
+      setSelectedSeason(selectedSeason)
+      setSelectedType(selectedType)
     } catch (err) {
       if (err.response && err.response.status === 404)
-        this.props.history.replace('/not-found')
+        props.history.replace('/not-found')
     }
   }
 
-  mapToData(anime) {
+  const mapToData = anime => {
     const selectedGenres = anime.genres.map(g => {
-      return this.mapToSelect(g)
+      return mapToSelect(g)
     })
     const selectedStudios = anime.studios.map(s => {
-      return this.mapToSelect(s)
+      return mapToSelect(s)
     })
-    const selectedSeason = this.mapToSelect({ id: null, name: anime.season })
-    const selectedType = this.mapToSelect({ id: null, name: anime.type })
+    const selectedSeason = mapToSelect({ id: null, name: anime.season })
+    const selectedType = mapToSelect({ id: null, name: anime.type })
     return { selectedGenres, selectedStudios, selectedSeason, selectedType }
   }
 
-  async componentDidMount() {
-    await this.loadAnime()
-    await this.loadGenres()
-    await this.loadStudios()
-    this.loadSeasons()
-    this.loadTypes()
-  }
+  useEffect(() => {
+    loadAnime()
+    loadGenres()
+    loadStudios()
+    loadSeasons()
+    loadTypes()
+  }, [])
 
-  doSubmit = async () => {
+  const handleSubmit = async () => {
     if (!auth.isAdmin()) {
       toast.error('Unauthorized user')
-      console.log(toast)
       return
     }
 
-    const {
-      data,
-      selectedGenres,
-      selectedStudios,
-      selectedSeason,
-      selectedType
-    } = this.state
+    const _anime = { ...anime }
 
-    const anime = { ...data }
+    _anime.genreIds = selectedGenres.map(g => g.id) || []
+    _anime.studioIds = selectedStudios.map(s => s.id) || []
+    _anime.season = selectedSeason ? selectedSeason.value : ''
+    _anime.type = selectedType ? selectedType.value : ''
 
-    anime.genreIds = selectedGenres.map(g => g.id) || []
-    anime.studioIds = selectedStudios.map(s => s.id) || []
-    anime.season = selectedSeason ? selectedSeason.value : ''
-    anime.type = selectedType ? selectedType.value : ''
-
-    if (anime.releaseDate) {
-      anime.releaseDate = new Date(anime.releaseDate).toISOString()
+    if (_anime.releaseDate) {
+      _anime.releaseDate = new Date(_anime.releaseDate).toISOString()
     } else {
-      delete anime.releaseDate
+      delete _anime.releaseDate
     }
 
-    anime.id
-      ? await this.context.onPutAnime(anime.id, anime)
-      : await this.context.onPostAnime(anime)
+    _anime.id
+      ? await context.onPutAnime(_anime.id, _anime)
+      : await context.onPostAnime(_anime)
 
-    anime.id ? toast.success('Updated') : toast.success('Added')
+    _anime.id ? toast.success('Updated') : toast.success('Added')
 
-    this.props.history.push('/')
+    props.history.push('/')
 
-    this.context.dispatch({ type: SET_REFRESH, payload: new Date() })
+    context.dispatch({ type: SET_REFRESH, payload: new Date() })
   }
 
-  handleChangeGenres = selectedGenres => this.setState({ selectedGenres })
+  const handleChangeGenres = selectedGenres => setSelectedGenres(selectedGenres)
 
-  handleChangeSeason = selectedSeason => this.setState({ selectedSeason })
+  const handleChangeSeason = selectedSeason => setSelectedSeason(selectedSeason)
 
-  handleChangeType = selectedType => this.setState({ selectedType })
+  const handleChangeType = selectedType => setSelectedType(selectedType)
 
-  handleChangeStudios = selectedStudios => this.setState({ selectedStudios })
+  const handleChangeStudios = selectedStudios =>
+    setSelectedStudios(selectedStudios)
 
-  handleDateChange = date => {
-    const data = { ...this.state.data }
+  const handleDateChange = date => {
+    const _anime = { ...anime }
 
-    data.releaseDate = formatDate(date)
+    _anime.releaseDate = formatDate(date)
 
-    this.setState({ data })
+    setAnime(_anime)
   }
 
-  render() {
-    const id = this.props.match.params.id
+  const id = props.match.params.id
 
-    return (
-      <Spinner isLoaded={this.state.studios.length > 0 || id === 'new'}>
-        <div className="col-8 offset-2">
-          <h1>{id !== 'new' ? 'Edit Form' : 'Add Form'}</h1>
+  return (
+    <Spinner isLoaded={studios.length > 0 || id === 'new'}>
+      <div className="col-8 offset-2">
+        <h1>{id !== 'new' ? 'Edit Form' : 'Add Form'}</h1>
 
-          <span className=" d-flex justify-content-end">
-            <Link to="/">
-              <button className="btn fa fa-arrow-left btn-secondary btn-lg " />
-            </Link>
-          </span>
-          <form onSubmit={this.handleSubmit}>
-            {this.renderInput('title', 'Title')}
-            {this.renderTextArea('description', 'Description')}
+        <span className=" d-flex justify-content-end">
+          <Link to="/">
+            <button className="btn fa fa-arrow-left btn-secondary btn-lg " />
+          </Link>
+        </span>
+        <Form
+          data={{ data: anime, setData: setAnime }}
+          errors={{ errors, setErrors }}
+          onSubmit={handleSubmit}
+          schema={schema}
+        >
+          {({
+            renderButton,
+            renderInput,
+            renderSelect,
+            renderTextArea,
+            renderDatePicker
+          }) => {
+            return (
+              <React.Fragment>
+                {renderInput('title', 'Title')}
 
-            {this.renderSelect(
-              'type',
-              'Type',
-              this.state.selectedType,
-              this.handleChangeType,
-              this.state.types
-            )}
+                {renderTextArea('description', 'Description')}
 
-            <div className="row">
-              <div className="col-8">
-                {this.renderSelect(
-                  'season',
-                  'Season',
-                  this.state.selectedSeason,
-                  this.handleChangeSeason,
-                  this.state.seasons
+                {renderSelect(
+                  'type',
+                  'Type',
+                  selectedType,
+                  handleChangeType,
+                  types
                 )}
-              </div>
-              <div className="col-4 d-flex justify-content-end">
-                {this.renderDatePicker('releaseDate', 'Release', {
-                  onChange: this.handleDateChange
-                })}
-              </div>
-            </div>
 
-            {this.renderSelect(
-              'genreIds',
-              'Genres',
-              this.state.selectedGenres,
-              this.handleChangeGenres,
-              this.state.genres,
-              { isMulti: true }
-            )}
+                <div className="row">
+                  <div className="col-8">
+                    {renderSelect(
+                      'season',
+                      'Season',
+                      selectedSeason,
+                      handleChangeSeason,
+                      seasons
+                    )}
+                  </div>
+                  <div className="col-4 d-flex justify-content-end">
+                    {renderDatePicker('releaseDate', 'Release', {
+                      onChange: handleDateChange
+                    })}
+                  </div>
+                </div>
 
-            {this.renderSelect(
-              'studioIds',
-              'Studios',
-              this.state.selectedStudios,
-              this.handleChangeStudios,
-              this.state.studios,
-              { isMulti: true }
-            )}
+                {renderSelect(
+                  'genreIds',
+                  'Genres',
+                  selectedGenres,
+                  handleChangeGenres,
+                  genres,
+                  { isMulti: true }
+                )}
 
-            {this.renderButton(id !== 'new' ? 'Update' : 'Save')}
-          </form>
-        </div>
-      </Spinner>
-    )
-  }
+                {renderSelect(
+                  'studioIds',
+                  'Studios',
+                  selectedStudios,
+                  handleChangeStudios,
+                  studios,
+                  { isMulti: true }
+                )}
+
+                {renderButton(id !== 'new' ? 'Update' : 'Save')}
+              </React.Fragment>
+            )
+          }}
+        </Form>
+      </div>
+    </Spinner>
+  )
 }
 
 export default memo(AnimeForm)

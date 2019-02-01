@@ -17,7 +17,7 @@ const Routes = () => {
       <GuestRoute path="/login" component={LoginForm} />
       <GuestRoute path="/register" component={RegisterForm} />
       <AuthRoute path="/animes/:id" component={AnimeForm} />
-      <Route path="/test" component={Login} />>
+      {/* <AuthRoute path="/test" component={Login} />> */}
       <Route path="/not-found" component={NotFound} />>
       <Redirect from="/" exact to="/home" />
       <Redirect to="/not-found" />
