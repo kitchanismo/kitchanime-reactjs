@@ -1,14 +1,9 @@
 import React, { useState } from 'react'
 import Joi from 'joi-browser'
 import Input from './input'
-import { capitalize } from '../../services/utilsService'
 import DatePicker from 'react-datepicker'
 import Select from 'react-select'
 import 'react-datepicker/dist/react-datepicker.css'
-
-export const mapToSelect = ({ id, name }) => {
-  return { id, label: capitalize(name), value: name }
-}
 
 const Form = props => {
   const { data, setData } = props.data
@@ -96,7 +91,7 @@ const Form = props => {
     if (errorMessage) _errors[input.name] = errorMessage
     else delete _errors[input.name]
 
-    const newErrors = ClearConfirmPassword(input, _errors, data.password)
+    const newErrors = checkConfirmPassword(input, _errors, data.password)
 
     const _data = { ...data }
     _data[input.name] = input.value
@@ -105,7 +100,7 @@ const Form = props => {
     setErrors(newErrors)
   }
 
-  const ClearConfirmPassword = (input, errors, password) => {
+  const checkConfirmPassword = (input, errors, password) => {
     const newErrors = { ...errors }
     if (input.name === 'confirmPassword') {
       if (input.value === password) {

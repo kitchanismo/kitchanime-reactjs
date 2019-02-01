@@ -1,7 +1,7 @@
 import { useEffect, useReducer } from 'react'
 import { SET_ITEMS } from './types'
 
-const useResource = (request, items, args) => {
+const useRequest = (request, items) => {
   const reducer = (state, action) => {
     const { payload, type } = action
     switch (type) {
@@ -17,7 +17,7 @@ const useResource = (request, items, args) => {
   const [state, dispatch] = useReducer(reducer, initialState)
 
   useEffect(() => {
-    request({ ...args }).then(response => {
+    request().then(response => {
       dispatch({ type: SET_ITEMS, payload: response[items] })
     })
   }, [])
@@ -25,4 +25,4 @@ const useResource = (request, items, args) => {
   return { state, dispatch }
 }
 
-export default useResource
+export default useRequest

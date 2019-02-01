@@ -22,4 +22,8 @@ export const createArray = (start, end) => {
   return arr
 }
 
+export const mapToSelect = ({ id, name }) => {
+  return { id, label: capitalize(name), value: name }
+}
+
 export const capitalize = str => _.startCase(str)

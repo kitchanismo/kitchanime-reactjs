@@ -1,18 +1,25 @@
 import React, { memo, useEffect, useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import Joi from 'joi-browser'
-import { toast } from 'react-toastify'
 import Spinner from './../partials/spinner'
-
+import useAnime from '../../hooks/useAnime'
 import auth from '../../services/authService'
-import { formatDate } from '../../services/utilsService'
+import Form from '../partials/form'
 
 import { AnimeContext } from './../../context'
+import { formatDate, mapToSelect } from '../../services/utilsService'
 import { SET_REFRESH } from './../../hooks/types'
-import Form, { mapToSelect } from '../partials/form'
+import { toast } from 'react-toastify'
+import { getAnime, putAnime, postAnime } from './../../services/animeService'
 
 const AnimeForm = props => {
   const context = useContext(AnimeContext)
+  const id = props.match.params.id
+
+  const {
+    state: { genres, studios, seasons, types },
+    dispatch
+  } = useAnime({ id: props.match.params.id })
 
   const [anime, setAnime] = useState({
     id: 0,
@@ -24,11 +31,9 @@ const AnimeForm = props => {
     studios: [],
     releaseDate: ''
   })
+
   const [errors, setErrors] = useState({})
-  const [genres, setGenres] = useState([])
-  const [studios, setStudios] = useState([])
-  const [seasons, setSeasons] = useState([])
-  const [types, setTypes] = useState([])
+
   const [selectedGenres, setSelectedGenres] = useState([])
   const [selectedStudios, setSelectedStudios] = useState([])
   const [selectedSeason, setSelectedSeason] = useState(null)
@@ -49,37 +54,15 @@ const AnimeForm = props => {
     studios: Joi.array().optional()
   }
 
-  const loadGenres = async () => {
-    let { genres } = await context.onGetGenres()
-
-    genres = genres.map(g => {
-      return mapToSelect(g)
-    })
-    setGenres(genres)
-  }
-
-  const loadStudios = async () => {
-    let { studios } = await context.onGetStudios()
-
-    studios = studios.map(s => {
-      return mapToSelect(s)
-    })
-    setStudios(studios)
-  }
-
-  const loadSeasons = () => setSeasons(context.onGetSeasons())
-
-  const loadTypes = () => setTypes(context.onGetTypes())
-
-  const mapToModel = ({ id, value }) => ({ id, name: value })
+  useEffect(() => {
+    loadAnime()
+  }, [])
 
   const loadAnime = async () => {
     try {
-      const id = props.match.params.id
-
       if (id === 'new') return
 
-      let { anime } = await context.onGetAnime(id)
+      let { anime } = await getAnime(id)
 
       const {
         selectedGenres,
@@ -113,14 +96,6 @@ const AnimeForm = props => {
     return { selectedGenres, selectedStudios, selectedSeason, selectedType }
   }
 
-  useEffect(() => {
-    loadAnime()
-    loadGenres()
-    loadStudios()
-    loadSeasons()
-    loadTypes()
-  }, [])
-
   const handleSubmit = async () => {
     if (!auth.isAdmin()) {
       toast.error('Unauthorized user')
@@ -140,9 +115,7 @@ const AnimeForm = props => {
       delete _anime.releaseDate
     }
 
-    _anime.id
-      ? await context.onPutAnime(_anime.id, _anime)
-      : await context.onPostAnime(_anime)
+    _anime.id ? await putAnime(_anime.id, _anime) : await postAnime(_anime)
 
     _anime.id ? toast.success('Updated') : toast.success('Added')
 
@@ -167,8 +140,6 @@ const AnimeForm = props => {
 
     setAnime(_anime)
   }
-
-  const id = props.match.params.id
 
   return (
     <Spinner isLoaded={studios.length > 0 || id === 'new'}>

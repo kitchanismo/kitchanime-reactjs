@@ -6,12 +6,14 @@ import Table from '../partials/table'
 import { formatDate } from '../../services/utilsService'
 import auth from '../../services/authService'
 import { toast } from 'react-toastify'
+import { sortBy } from './../../services/utilsService'
+import { SET_ITEMS, SET_PAGENUM, SET_REFRESH } from './../../hooks/types'
+import { deleteAnime } from '../../services/animeService'
 
 const Animes = props => {
   const {
-    state: { animes },
-    onSort,
-    onDelete
+    state: { animes, pages },
+    dispatch
   } = useContext(AnimeContext)
 
   const [sortColumn, setSortColumn] = useState({ path: 'title', order: 'asc' })
@@ -48,7 +50,7 @@ const Animes = props => {
             <button className="btn btn-warning btn-sm mr-1 fa fa-pencil text-white" />
           </Link>
           <button
-            onClick={() => doDelete(anime)}
+            onClick={async () => await doDelete(anime)}
             className="btn btn-danger btn-sm fa fa-trash text-white"
           />
         </div>
@@ -56,13 +58,25 @@ const Animes = props => {
     }
   ]
 
-  const doDelete = anime => {
+  const doDelete = async anime => {
     if (!auth.isAdmin()) {
       toast.error('Unauthorized user')
       return
     }
 
-    onDelete(anime)
+    let _animes = [...animes]
+
+    _animes = _animes.filter(a => a.id !== anime.id)
+
+    dispatch({ type: SET_ITEMS, payload: _animes })
+
+    await deleteAnime(anime.id)
+
+    if (_animes.length === 0) {
+      dispatch({ type: SET_PAGENUM, payload: 1 })
+      return
+    }
+    dispatch({ type: SET_REFRESH, payload: new Date() })
   }
 
   const renderItemsName = items => {
@@ -84,7 +98,7 @@ const Animes = props => {
   }
 
   const handleSort = sortColumn => {
-    onSort(sortColumn)
+    dispatch({ type: SET_ITEMS, payload: sortBy(animes, sortColumn) })
     setSortColumn(sortColumn)
   }
 

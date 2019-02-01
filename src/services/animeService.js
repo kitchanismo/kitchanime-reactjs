@@ -23,24 +23,20 @@ export function getAnime(id) {
   return http.get(`/api/animes/${id}`).then(data => data.data)
 }
 
-export function getSeasons() {
-  return [
-    { label: 'Winter', value: 'winter' },
-    { label: 'Spring', value: 'spring' },
-    { label: 'Summer', value: 'summer' },
-    { label: 'Fall', value: 'fall' }
-  ]
-}
+export const getSeasons = [
+  { label: 'Winter', value: 'winter' },
+  { label: 'Spring', value: 'spring' },
+  { label: 'Summer', value: 'summer' },
+  { label: 'Fall', value: 'fall' }
+]
 
-export function getTypes() {
-  return [
-    { label: 'TV', value: 'tv' },
-    { label: 'Movie', value: 'movie' },
-    { label: 'OVA', value: 'ova' },
-    { label: 'ONA', value: 'ona' },
-    { label: 'Other', value: 'other' }
-  ]
-}
+export const getTypes = [
+  { label: 'TV', value: 'tv' },
+  { label: 'Movie', value: 'movie' },
+  { label: 'OVA', value: 'ova' },
+  { label: 'ONA', value: 'ona' },
+  { label: 'Other', value: 'other' }
+]
 
 export function postAnime(anime) {
   http.setJwt(auth.jwt())
