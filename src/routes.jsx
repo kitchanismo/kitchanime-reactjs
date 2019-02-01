@@ -8,6 +8,7 @@ import LoginForm from './components/auth/loginForm'
 import RegisterForm from './components/auth/registerForm'
 import AuthRoute from './components/partials/authRoute'
 import GuestRoute from './components/partials/guestRoute'
+import Login from './components/test'
 
 const Routes = () => {
   return (
@@ -16,6 +17,7 @@ const Routes = () => {
       <GuestRoute path="/login" component={LoginForm} />
       <GuestRoute path="/register" component={RegisterForm} />
       <AuthRoute path="/animes/:id" component={AnimeForm} />
+      <Route path="/test" component={Login} />>
       <Route path="/not-found" component={NotFound} />>
       <Redirect from="/" exact to="/home" />
       <Redirect to="/not-found" />

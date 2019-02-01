@@ -1,20 +1,15 @@
-import React from 'react'
-import Form from './../partials/form'
+import React, { useState } from 'react'
 import Joi from 'joi-browser'
 import auth from './../../services/authService'
 import { capitalize } from '../../services/utilsService'
 import { toast } from 'react-toastify'
+import FormHooks from '../partials/formHooks'
 
-class LoginForm extends Form {
-  state = {
-    data: {
-      username: '',
-      password: ''
-    },
-    errors: {}
-  }
+const LoginForm = props => {
+  const [user, setUser] = useState({ username: '', password: '' })
+  const [errors, setErrors] = useState({})
 
-  schema = {
+  const schema = {
     username: Joi.string()
       .required()
       .label('Username'),
@@ -23,29 +18,37 @@ class LoginForm extends Form {
       .label('Password')
   }
 
-  doSubmit = async () => {
-    const user = { ...this.state.data }
+  const handleSubmit = async (e, data) => {
     try {
-      await auth.login(user)
+      await auth.login(data)
       toast.success(`Welcome, ${capitalize(user.username)}`)
-      this.props.history.replace('/home')
+      props.history.replace('/home')
     } catch (err) {
       toast.error('Invalid username or password')
     }
   }
 
-  render() {
-    return (
-      <div className="col-6 offset-3">
-        <h1>Login</h1>
-        <form onSubmit={this.handleSubmit}>
-          {this.renderInput('username', 'Username')}
-          {this.renderInput('password', 'Password', 'password')}
-          {this.renderButton('Login')}
-        </form>
-      </div>
-    )
-  }
+  return (
+    <div className="col-6 offset-3">
+      <h1>Login</h1>
+      <FormHooks
+        data={{ data: user, setData: setUser }}
+        errors={{ errors, setErrors }}
+        onSubmit={handleSubmit}
+        schema={schema}
+      >
+        {(renderButton, renderInput) => {
+          return (
+            <React.Fragment>
+              {renderInput('username', 'Username')}
+              {renderInput('password', 'Password', 'password')}
+              {renderButton('Login')}
+            </React.Fragment>
+          )
+        }}
+      </FormHooks>
+    </div>
+  )
 }
 
 export default LoginForm

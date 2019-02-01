@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React, { Component, useState } from 'react'
 import Joi from 'joi-browser'
-import { capitalize } from './../../services/utilsService'
-import auth from './../../services/authService'
+import auth from '../services/authService'
+import { capitalize } from '../services/utilsService'
 import { toast } from 'react-toastify'
-import FormHooks from '../partials/formHooks'
+import FormHooks, { extendForm } from './partials/formHooks'
 
-const RegisterForm = props => {
+const Login = props => {
   const [user, setUser] = useState({
     username: '',
     password: '',
@@ -104,4 +104,4 @@ const RegisterForm = props => {
   )
 }
 
-export default RegisterForm
+export default Login

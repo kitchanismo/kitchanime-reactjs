@@ -85,7 +85,6 @@ class Form extends Component {
       </button>
     )
   }
-  errorMessage
 
   renderSelect(name, label, value, onChange, options, rest) {
     return (
