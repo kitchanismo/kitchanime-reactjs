@@ -5,7 +5,7 @@ import { AnimeContext } from './../context'
 import Spinner from './partials/spinner'
 import auth from '../services/authService'
 import SearchForm from './searchForm'
-import { SEARCH_ITEMS, SET_PAGENUM } from '../hooks/types'
+import { SEARCH_ITEMS } from '../hooks/types'
 import { pagination } from '../config.json'
 
 const Home = props => {
@@ -38,33 +38,27 @@ const Home = props => {
       <React.Fragment>
         {renderTitle()}
         <div className="row no-gutters ">
-          <div className="col-7 d-flex justify-content-start">
+          <div className="col-7 d-flex justify-content-start ">
             {auth.isAdmin() && (
               <Link to="/animes/new">
-                <button className="btn fa fa-plus btn-success btn-lg " />
+                <button className="btn fa fa-plus btn-success btn-lg mr-2 mt-1" />
               </Link>
             )}
             <div>
-              <button
-                onClick={handleRefresh}
-                className="btn fa fa-refresh btn-secondary btn-lg ml-2"
-              />
+              <Link to="/home">
+                <button
+                  onClick={handleRefresh}
+                  className="btn fa fa-refresh btn-secondary btn-lg mt-1"
+                />
+              </Link>
             </div>
           </div>
 
-          <div className="col-5 d-flex justify-content-end mb-2">
+          <div className="col-5 mb-2  ">
             <SearchForm {...paginateProps} />
           </div>
         </div>
       </React.Fragment>
-    )
-  }
-
-  const noResult = () => {
-    return (
-      <div className="row no-gutters">
-        <h1>No Result</h1>
-      </div>
     )
   }
 

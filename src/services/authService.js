@@ -24,14 +24,18 @@ async function register(user) {
 }
 
 function logout() {
-  localStorage.removeItem('access-token')
+  http.setJwt(jwt())
   localStorage.removeItem('refresh-token')
+  localStorage.removeItem('access-token')
+  http
+    .post('/token/revoke', { refreshToken: jwt().refreshToken })
+    .then(res => {})
 }
 
 function getDecodeToken() {
   try {
-    const jwt = localStorage.getItem('access-token')
-    return { ...jwtDecode(jwt) }
+    const token = localStorage.getItem('access-token')
+    return { ...jwtDecode(token) }
   } catch (ex) {
     return null
   }

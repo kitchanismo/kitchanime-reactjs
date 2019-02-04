@@ -212,6 +212,8 @@ const AnimeForm = props => {
                   { isMulti: true }
                 )}
 
+                {renderInput('imageUrl', 'Image Url')}
+
                 {renderButton(id !== 'new' ? 'Update' : 'Save')}
               </React.Fragment>
             )

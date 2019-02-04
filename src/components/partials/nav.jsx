@@ -3,7 +3,10 @@ import { Link, NavLink } from 'react-router-dom'
 import auth from '../../services/authService'
 import { capitalize } from '../../services/utilsService'
 
-const Nav = () => {
+const Nav = props => {
+  const handleLogout = () => {
+    auth.logout()
+  }
   return (
     <React.Fragment>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -26,26 +29,23 @@ const Nav = () => {
             className="collapse navbar-collapse d-flex justify-content-end"
             id="navbarNav"
           >
-            <ul className="navbar-nav" style={{ marginBottom: '20px' }}>
+            <ul className="navbar-nav">
               {auth.isValidUser() && (
                 <React.Fragment>
-                  <i
-                    className="fa fa-user  text-warning"
-                    style={{ marginTop: '12px !important' }}
-                  />
+                  <i className="fa fa-user  text-warning" />
                   <li className="nav-item">
                     <NavLink className="nav-link active" to="/home">
                       {capitalize(auth.getCurrentUser().username)}
                     </NavLink>
                   </li>
                   <li className="nav-item">
-                    <NavLink
+                    <a
                       className="nav-link"
-                      to="/login"
-                      onClick={() => auth.logout()}
+                      href="/login"
+                      onClick={handleLogout}
                     >
                       Logout
-                    </NavLink>
+                    </a>
                   </li>
                 </React.Fragment>
               )}
@@ -67,6 +67,14 @@ const Nav = () => {
             </ul>
           </div>
         </div>
+        <style jsx>{`
+          .navbar {
+            margin-bottom: 20px;
+          }
+          .fa-user {
+            margin-top: 12px !important;
+          }
+        `}</style>
       </nav>
     </React.Fragment>
   )

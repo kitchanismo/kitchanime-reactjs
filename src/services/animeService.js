@@ -6,6 +6,7 @@ export function getAnimes() {
 }
 
 export function getPagedAnimes(num, limit, title = '') {
+
   return http
     .get(`/api/animes/page/${num}?limit=${limit}&title=${title}`)
     .then(data => data.data.data)
