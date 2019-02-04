@@ -7,20 +7,18 @@ import Routes from './routes'
 import './App.css'
 import 'react-toastify/dist/ReactToastify.css'
 
-class App extends Component {
-  render() {
-    return (
-      <React.Fragment>
-        <AnimeProvider>
-          <Nav />
-          <ToastContainer autoClose={3000} />
-          <main className="container">
-            <Routes />
-          </main>
-        </AnimeProvider>
-      </React.Fragment>
-    )
-  }
+const App = () => {
+  return (
+    <React.Fragment>
+      <AnimeProvider>
+        <Nav />
+        <ToastContainer autoClose={3000} />
+        <main className="container">
+          <Routes />
+        </main>
+      </AnimeProvider>
+    </React.Fragment>
+  )
 }
 
 export default App
