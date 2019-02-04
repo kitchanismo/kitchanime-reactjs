@@ -178,7 +178,7 @@ const AnimeForm = props => {
                 )}
 
                 <div className="row">
-                  <div className="col-8">
+                  <div className="col-6">
                     {renderSelect(
                       'season',
                       'Season',
@@ -187,30 +187,35 @@ const AnimeForm = props => {
                       seasons
                     )}
                   </div>
-                  <div className="col-4 d-flex justify-content-end">
+                  <div className="col-6">
                     {renderDatePicker('releaseDate', 'Release', {
                       onChange: handleDateChange
                     })}
                   </div>
                 </div>
 
-                {renderSelect(
-                  'genreIds',
-                  'Genres',
-                  selectedGenres,
-                  handleChangeGenres,
-                  genres,
-                  { isMulti: true }
-                )}
-
-                {renderSelect(
-                  'studioIds',
-                  'Studios',
-                  selectedStudios,
-                  handleChangeStudios,
-                  studios,
-                  { isMulti: true }
-                )}
+                <div className="row">
+                  <div className="col-6">
+                    {renderSelect(
+                      'genreIds',
+                      'Genres',
+                      selectedGenres,
+                      handleChangeGenres,
+                      genres,
+                      { isMulti: true }
+                    )}
+                  </div>
+                  <div className="col-6">
+                    {renderSelect(
+                      'studioIds',
+                      'Studios',
+                      selectedStudios,
+                      handleChangeStudios,
+                      studios,
+                      { isMulti: true }
+                    )}
+                  </div>
+                </div>
 
                 {renderInput('imageUrl', 'Image Url')}
 

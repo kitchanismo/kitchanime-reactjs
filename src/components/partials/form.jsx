@@ -139,11 +139,11 @@ const Form = props => {
     )
   }
 
-  const renderButton = (label, classes = '') => {
+  const renderButton = label => {
     return (
       <button
         disabled={validate() || Object.keys(errors).length > 0}
-        className={`btn btn-primary ${classes}`}
+        className="btn btn-primary mt-3"
       >
         {label}
       </button>

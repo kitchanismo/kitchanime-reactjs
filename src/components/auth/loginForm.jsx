@@ -31,7 +31,7 @@ const LoginForm = props => {
   }
 
   return (
-    <div className="col-6 offset-3">
+    <div className="col-6 offset-3 mt-5">
       <h1>Login</h1>
       <Form
         data={{ data: user, setData: setUser }}
