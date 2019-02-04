@@ -1,58 +1,20 @@
-import React, { useContext, memo, useReducer, useState } from 'react'
-import Paginate from './animes/paginate'
+import React, { useContext, memo, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import Animes from './animes/index'
 import { AnimeContext } from './../context'
-import { Link } from 'react-router-dom'
 import Spinner from './partials/spinner'
 import auth from '../services/authService'
+import SearchForm from './searchForm'
+import { SEARCH_ITEMS, SET_PAGENUM } from '../hooks/types'
+import { pagination } from '../config.json'
 
 const Home = props => {
   const { state, dispatch } = useContext(AnimeContext)
-  const [title, setTitle] = useState('')
-  const [hasResult, setHasResult] = useState(true)
 
-  const handleSubmit = async e => {
-    dispatch({ type: 'SEARCH_TITLE', payload: title })
-    console.log(state.pages)
-    if (state.animes.length === 0) {
-      setHasResult(false)
-    }
-  }
+  const { pageNumbers: PAGE_NUMBERS } = pagination
 
-  const noResult = () => {
-    return (
-      <div className="row no-gutters">
-        <h1>No Result</h1>
-      </div>
-    )
-  }
-
-  const searchBox = () => {
-    return (
-      <div className="row no-gutters ">
-        {auth.isAdmin() && (
-          <div className="col-8 d-flex justify-content-start">
-            <Link to="/animes/new">
-              <button className="btn fa fa-plus btn-success btn-lg " />
-            </Link>
-          </div>
-        )}
-        <div className="col-4  d-flex justify-content-end mb-2">
-          <input
-            type={'text'}
-            name={title}
-            value={title}
-            onChange={e => setTitle(e.target.value)}
-            className="form-control"
-            placeholder="Search title"
-          />
-          <button onClick={handleSubmit} className={`btn btn-primary ml-2`}>
-            Search
-          </button>
-        </div>
-      </div>
-    )
-  }
+  const [start, setStart] = useState(1)
+  const [end, setEnd] = useState(PAGE_NUMBERS)
 
   const renderTitle = () => {
     return (
@@ -71,17 +33,58 @@ const Home = props => {
     )
   }
 
+  const renderHeader = () => {
+    return (
+      <React.Fragment>
+        {renderTitle()}
+        <div className="row no-gutters ">
+          <div className="col-7 d-flex justify-content-start">
+            {auth.isAdmin() && (
+              <Link to="/animes/new">
+                <button className="btn fa fa-plus btn-success btn-lg " />
+              </Link>
+            )}
+            <div>
+              <button
+                onClick={handleRefresh}
+                className="btn fa fa-refresh btn-secondary btn-lg ml-2"
+              />
+            </div>
+          </div>
+
+          <div className="col-5 d-flex justify-content-end mb-2">
+            <SearchForm {...paginateProps} />
+          </div>
+        </div>
+      </React.Fragment>
+    )
+  }
+
+  const noResult = () => {
+    return (
+      <div className="row no-gutters">
+        <h1>No Result</h1>
+      </div>
+    )
+  }
+
+  const handleRefresh = () => {
+    dispatch({ type: SEARCH_ITEMS, payload: '' })
+  }
+
+  const paginateProps = {
+    start,
+    end,
+    setStart,
+    setEnd
+  }
+
   return (
     <React.Fragment>
-      {hasResult && (
-        <Spinner isLoaded={state.animes.length > 0 && hasResult}>
-          {renderTitle()}
-          {searchBox()}
-          <Animes {...props} />
-          <Paginate />
-        </Spinner>
-      )}
-      {!hasResult && noResult()}
+      {renderHeader()}
+      <Spinner isLoaded={state.total > 0}>
+        <Animes {...paginateProps} />
+      </Spinner>
     </React.Fragment>
   )
 }

@@ -1,10 +1,12 @@
 import { useEffect, useReducer, useRef } from 'react'
+import { toast } from 'react-toastify'
 import {
   SET_ITEMS,
   SET_PAGENUM,
   SET_PAGES,
   SET_TOTAL,
-  SET_REFRESH
+  SET_REFRESH,
+  SEARCH_ITEMS
 } from './types'
 
 const reducer = (state, action) => {
@@ -20,7 +22,7 @@ const reducer = (state, action) => {
       return { ...state, total: payload }
     case SET_REFRESH:
       return { ...state, refresh: payload }
-    case 'SEARCH_TITLE':
+    case SEARCH_ITEMS:
       return { ...state, title: payload }
     default:
       return state
@@ -47,7 +49,7 @@ const usePagination = ({
     pages: 0,
     total: 0,
     take,
-    refresh: null
+    refresh: false
   }
   const [{ refresh, title, pageNum, ...rest }, dispatch] = useReducer(
     reducer,
@@ -62,18 +64,21 @@ const usePagination = ({
           dispatch({ type: SET_PAGES, payload: response[pages] })
           dispatch({ type: SET_TOTAL, payload: response[total] })
         })
-        .catch(error => {
-          dispatch({ type: SET_ITEMS, payload: [] })
-          dispatch({ type: SET_PAGES, payload: 0 })
-          dispatch({ type: SET_TOTAL, payload: 0 })
-          dispatch({ type: SET_PAGENUM, payload: 0 })
+        .catch(({ response }) => {
+          if (response && response.status === 404) {
+            dispatch({ type: SET_ITEMS, payload: [] })
+            dispatch({ type: SET_PAGES, payload: 0 })
+            dispatch({ type: SET_TOTAL, payload: 0 })
+            dispatch({ type: SET_PAGENUM, payload: 1 })
+            toast.error('No result/s found')
+          }
         })
     },
-    [refresh, title]
+    [refresh, title, pageNum]
   )
 
   return {
-    state: { pageNum, take, ...rest },
+    state: { refresh, pageNum, take, ...rest },
     dispatch
   }
 }

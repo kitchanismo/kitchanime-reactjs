@@ -3,12 +3,7 @@ import { AnimeContext } from '../context'
 import { pagination } from '../config.json'
 import { sortBy } from '../services/utilsService'
 import { getPagedAnimes } from '../services/animeService'
-
 import usePagination from '../hooks/usePagination'
-
-import { SET_ITEMS, SET_PAGENUM, SET_REFRESH } from '../hooks/types'
-
-import { deleteAnime } from '../services/animeService'
 
 const AnimeProvider = props => {
   const {
@@ -19,7 +14,7 @@ const AnimeProvider = props => {
   return (
     <AnimeContext.Provider
       value={{
-        state: { animes, paginate: { pages, pageNum }, total },
+        state: { animes, pages, pageNum, total },
         dispatch
       }}
     >

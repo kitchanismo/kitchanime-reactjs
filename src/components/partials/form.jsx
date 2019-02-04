@@ -6,7 +6,7 @@ import Select from 'react-select'
 import 'react-datepicker/dist/react-datepicker.css'
 
 const Form = props => {
-  const { data, setData } = props.data
+  const { data, setData } = props.data || {}
   const { errors, setErrors } = props.errors || {}
   const schema = { ...props.schema }
 

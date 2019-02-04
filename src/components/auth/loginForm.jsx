@@ -21,10 +21,12 @@ const LoginForm = props => {
   const handleSubmit = async (e, data) => {
     try {
       await auth.login(data)
-      toast.success(`Welcome, ${capitalize(user.username)}`)
+      toast.success(`Welcome, ${capitalize(data.username)}`)
       props.history.replace('/home')
-    } catch (err) {
-      toast.error('Invalid username or password')
+    } catch ({ response }) {
+      if (response && response.status === 401) {
+        toast.error(response.data.status.errors)
+      }
     }
   }
 

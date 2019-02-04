@@ -2,13 +2,13 @@ import React, { useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AnimeContext } from '../../context'
 import Table from '../partials/table'
-
 import { formatDate } from '../../services/utilsService'
 import auth from '../../services/authService'
 import { toast } from 'react-toastify'
 import { sortBy } from './../../services/utilsService'
 import { SET_ITEMS, SET_PAGENUM, SET_REFRESH } from './../../hooks/types'
 import { deleteAnime } from '../../services/animeService'
+import Paginate from './paginate'
 
 const Animes = props => {
   const {
@@ -73,7 +73,11 @@ const Animes = props => {
     await deleteAnime(anime.id)
 
     if (_animes.length === 0) {
-      dispatch({ type: SET_PAGENUM, payload: 1 })
+      const { start, end, setStart, setEnd } = props
+      dispatch({ type: SET_PAGENUM, payload: pageNum - 1 })
+      setStart(start - 1)
+      setEnd(end - 1)
+      return
     }
     dispatch({ type: SET_REFRESH, payload: new Date() })
   }
@@ -109,12 +113,15 @@ const Animes = props => {
   }
 
   return (
-    <Table
-      columns={withColumnActions()}
-      data={transformAnimes()}
-      sortColumn={sortColumn}
-      onSort={handleSort}
-    />
+    <React.Fragment>
+      <Table
+        columns={withColumnActions()}
+        data={transformAnimes()}
+        sortColumn={sortColumn}
+        onSort={handleSort}
+      />
+      <Paginate {...props} />
+    </React.Fragment>
   )
 }
 

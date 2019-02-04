@@ -60,19 +60,24 @@ const RegisterForm = props => {
 
     const _user = { ...user }
 
-    await auth.register(_user)
+    try {
+      await auth.register(_user)
 
-    const clearUser = {
-      username: '',
-      password: '',
-      email: '',
-      confirmPassword: ''
+      toast.success('Welcome, ' + capitalize(user.username))
+
+      setUser({
+        username: '',
+        password: '',
+        email: '',
+        confirmPassword: ''
+      })
+      setErrors(_errors)
+      props.history.replace('/')
+    } catch ({ response }) {
+      if (response && response.status === 400) {
+        toast.error(response.data.status.errors)
+      }
     }
-
-    toast.success('Welcome, ' + capitalize(user.username))
-    setUser(clearUser)
-    setErrors(_errors)
-    props.history.replace('/')
   }
 
   return (

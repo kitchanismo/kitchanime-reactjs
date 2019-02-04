@@ -34,7 +34,6 @@ function throwError(error) {
     error.response.status >= 400 &&
     error.response.status < 500
   if (!expectedError) {
-    console.log(error)
     toast.error('An unexpected error occurrred.')
     setJwt({ token: '', refreshToken: '' })
   }

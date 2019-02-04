@@ -17,8 +17,7 @@ const AnimeForm = props => {
   const id = props.match.params.id
 
   const {
-    state: { genres, studios, seasons, types },
-    dispatch
+    state: { genres, studios, seasons, types }
   } = useAnime({ id: props.match.params.id })
 
   const [anime, setAnime] = useState({
