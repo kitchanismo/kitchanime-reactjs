@@ -5,8 +5,8 @@ import Table from '../partials/table'
 import { formatDate } from '../../services/utilsService'
 import auth from '../../services/authService'
 import { toast } from 'react-toastify'
-import { sortBy } from './../../services/utilsService'
-import { SET_ITEMS, SET_PAGENUM, SET_REFRESH } from './../../hooks/types'
+import { sortBy } from '../../services/utilsService'
+import { SET_ITEMS, SET_PAGENUM, SET_REFRESH } from '../../hooks/types'
 import { deleteAnime } from '../../services/animeService'
 import Paginate from './paginate'
 
@@ -15,8 +15,7 @@ const Animes = props => {
     state: { animes, pageNum },
     dispatch
   } = useContext(AnimeContext)
-
-  const [sortColumn, setSortColumn] = useState({ path: 'title', order: 'asc' })
+  const [sortColumn, setSortColumn] = useState({ path: 'name', order: 'asc' })
 
   const columns = [
     {
@@ -45,7 +44,7 @@ const Animes = props => {
       key: 'actions',
       label: 'Actions',
       content: anime => (
-        <div className="d-flex justify-content-center">
+        <div className="">
           <Link to={`/animes/${anime.id}`}>
             <button className="btn btn-warning btn-sm mr-1 fa fa-pencil text-white" />
           </Link>

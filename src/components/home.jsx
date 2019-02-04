@@ -1,12 +1,13 @@
 import React, { useContext, memo, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import Animes from './animes/index'
+import AnimesTable from './animes/animesTable'
 import { AnimeContext } from './../context'
 import Spinner from './partials/spinner'
 import auth from '../services/authService'
 import SearchForm from './searchForm'
 import { SEARCH_ITEMS } from '../hooks/types'
 import { pagination } from '../config.json'
+import HeaderTitle from './partials/headerTitle'
 
 const Home = props => {
   const { state, dispatch } = useContext(AnimeContext)
@@ -16,27 +17,10 @@ const Home = props => {
   const [start, setStart] = useState(1)
   const [end, setEnd] = useState(PAGE_NUMBERS)
 
-  const renderTitle = () => {
-    return (
-      <div className="row no-gutters align-items-center">
-        <div className="col  d-flex justify-content-start align-items-center">
-          <span>
-            <h1 className="mb-3">Animes</h1>
-          </span>
-          <h5>
-            <span className="badge badge-pill badge-primary ml-2">
-              {state.total}
-            </span>
-          </h5>
-        </div>
-      </div>
-    )
-  }
-
   const renderHeader = () => {
     return (
       <React.Fragment>
-        {renderTitle()}
+        <HeaderTitle total={state.total} title={'Animes'} />
         <div className="row no-gutters ">
           <div className="col-7 d-flex justify-content-start ">
             {auth.isAdmin() && (
@@ -45,7 +29,7 @@ const Home = props => {
               </Link>
             )}
             <div>
-              <Link to="/home">
+              <Link to="/">
                 <button
                   onClick={handleRefresh}
                   className="btn fa fa-refresh btn-secondary btn-lg mt-1"
@@ -77,7 +61,7 @@ const Home = props => {
     <React.Fragment>
       {renderHeader()}
       <Spinner isLoaded={state.total > 0}>
-        <Animes {...paginateProps} />
+        <AnimesTable {...paginateProps} />
       </Spinner>
     </React.Fragment>
   )

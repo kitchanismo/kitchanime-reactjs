@@ -51,8 +51,8 @@ function throwError(error) {
     error.response.status < 500
   if (!expectedError) {
     toast.error('An unexpected error occurrred.')
-    return Promise.reject(error)
   }
+  return Promise.reject(error)
 
   // if (error.response && error.response.data.status.name === 'ExpiredJwtToken') {
   //   if (!isRefreshing) {
