@@ -2,7 +2,7 @@ import axios from 'axios'
 import { toast } from 'react-toastify'
 //import { appUrl as apiURL } from '../config.json'
 
-const apiURL = proccess.env.API_URL || 'https://localhost:3333'
+const apiURL = process.env.API_URL || 'https://localhost:3333'
 
 axios.interceptors.response.use(
   response => response,
