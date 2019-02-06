@@ -1,5 +1,5 @@
 {
-  "appUrl": "https://kitchanime-node.herokuapp.com",
+  "appUrl": "http://127.0.0.1:3333",
   "pagination": {
     "perPage": 5,
     "pageNumbers": 3
