@@ -1,6 +1,8 @@
 import axios from 'axios'
 import { toast } from 'react-toastify'
-import { appUrl } from '../config.json'
+//import { appUrl as apiURL } from '../config.json'
+
+const apiURL = proccess.env.API_URL || 'https://localhost:3333'
 
 axios.interceptors.response.use(
   response => response,
@@ -10,7 +12,7 @@ axios.interceptors.response.use(
 )
 
 axios.interceptors.request.use(config => {
-  config.baseURL = appUrl
+  config.baseURL = apiURL
   return config
 })
 
