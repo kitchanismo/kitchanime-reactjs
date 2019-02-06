@@ -10,7 +10,7 @@ axios.interceptors.response.use(
 )
 
 axios.interceptors.request.use(config => {
-  config.baseURL = process.env.API_URL || apiUrl
+  config.baseURL = process.env.API_URL || apiURL
   return config
 })
 
