@@ -2,15 +2,14 @@ import React, { useContext, memo, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import AnimesTable from './animes/animesTable'
 import { AnimeContext } from './../context'
-import Spinner from './partials/spinner'
-import auth from '../services/authService'
+import Loader from './partials/loader'
+import withAuth from './hoc/withAuth'
 import SearchForm from './searchForm'
-import { SEARCH_ITEMS } from '../hooks/types'
 import { pagination } from '../config.json'
 import HeaderTitle from './partials/headerTitle'
 
-const Home = props => {
-  const { state, dispatch } = useContext(AnimeContext)
+const Home = ({ auth }) => {
+  const { state, onSearch } = useContext(AnimeContext)
 
   const { pageNumbers: PAGE_NUMBERS } = pagination
 
@@ -31,7 +30,7 @@ const Home = props => {
             <div>
               <Link to="/">
                 <button
-                  onClick={handleRefresh}
+                  onClick={() => onSearch('')}
                   className="btn fa fa-refresh btn-secondary btn-lg mt-1"
                 />
               </Link>
@@ -46,10 +45,6 @@ const Home = props => {
     )
   }
 
-  const handleRefresh = () => {
-    dispatch({ type: SEARCH_ITEMS, payload: '' })
-  }
-
   const paginateProps = {
     start,
     end,
@@ -60,11 +55,11 @@ const Home = props => {
   return (
     <React.Fragment>
       {renderHeader()}
-      <Spinner isLoaded={state.total > 0}>
+      <Loader isLoaded={state.total > 0}>
         <AnimesTable {...paginateProps} />
-      </Spinner>
+      </Loader>
     </React.Fragment>
   )
 }
 
-export default memo(Home)
+export default memo(withAuth(Home))

@@ -8,8 +8,8 @@ const Paginate = ({ start, end, setStart, setEnd }) => {
   const { pageNumbers: PAGE_NUMBERS } = pagination
 
   const {
-    dispatch,
-    state: { pageNum, pages }
+    state: { pageNum, pages },
+    onPageChange
   } = useContext(AnimeContext)
 
   const doNext = pageNum => {
@@ -20,20 +20,16 @@ const Paginate = ({ start, end, setStart, setEnd }) => {
   }
 
   //reset start end when delete is 0 in paged
-  useEffect(
-    () => {
-      if (end > pages && start !== 1) {
-        setStart(start - 1)
-        setEnd(end - 1)
-      }
-    },
-    [pageNum]
-  )
+  useEffect(() => {
+    if (end > pages && start !== 1) {
+      setStart(start - 1)
+      setEnd(end - 1)
+    }
+  }, [pageNum])
 
   const handlePageChange = _pageNum => {
     if (pageNum === _pageNum) return
-    dispatch({ type: SET_PAGENUM, payload: _pageNum })
-    // dispatch({ type: SET_REFRESH, payload: new Date() })
+    onPageChange(_pageNum)
   }
 
   const doPrev = _pageNum => {

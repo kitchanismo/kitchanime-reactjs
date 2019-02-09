@@ -4,7 +4,7 @@ import { SEARCH_ITEMS, SET_PAGENUM } from '../hooks/types'
 import { pagination } from '../config.json'
 
 const SearchForm = props => {
-  const { dispatch } = useContext(AnimeContext)
+  const { onPageChange, onSearch } = useContext(AnimeContext)
   const [title, setTitle] = useState('')
 
   const handleSubmit = async e => {
@@ -12,8 +12,8 @@ const SearchForm = props => {
     if (!title) return
     props.setStart(1)
     props.setEnd(pagination.pageNumbers)
-    dispatch({ type: SET_PAGENUM, payload: 1 })
-    dispatch({ type: SEARCH_ITEMS, payload: title })
+    onPageChange(1)
+    onSearch(title)
   }
 
   return (

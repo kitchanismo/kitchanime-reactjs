@@ -1,18 +1,17 @@
 import React, { memo, useEffect, useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import Joi from 'joi-browser'
-import Spinner from './../partials/spinner'
+import Loader from '../partials/loader'
 import useAnime from '../../hooks/useAnime'
-import auth from '../../services/authService'
+import withAuth from '../hoc/withAuth'
 import Form from '../partials/form'
 
 import { AnimeContext } from './../../context'
 import { formatDate, mapToSelect } from '../../services/utilsService'
-import { SET_REFRESH } from './../../hooks/types'
 import { toast } from 'react-toastify'
 import { getAnime, putAnime, postAnime } from './../../services/animeService'
 
-const AnimeForm = props => {
+const AnimeForm = ({ auth, ...props }) => {
   const context = useContext(AnimeContext)
   const id = props.match.params.id
 
@@ -120,7 +119,7 @@ const AnimeForm = props => {
 
     props.history.push('/')
 
-    context.dispatch({ type: SET_REFRESH, payload: new Date() })
+    context.onRefresh()
   }
 
   const handleChangeGenres = selectedGenres => setSelectedGenres(selectedGenres)
@@ -141,7 +140,7 @@ const AnimeForm = props => {
   }
 
   return (
-    <Spinner isLoaded={studios.length > 0 || id === 'new'}>
+    <Loader isLoaded={studios.length > 0 || id === 'new'}>
       <div className="col-8 offset-2">
         <h1>{id !== 'new' ? 'Edit Form' : 'Add Form'}</h1>
 
@@ -225,8 +224,8 @@ const AnimeForm = props => {
           }}
         </Form>
       </div>
-    </Spinner>
+    </Loader>
   )
 }
 
-export default memo(AnimeForm)
+export default memo(withAuth(AnimeForm))

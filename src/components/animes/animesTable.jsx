@@ -3,18 +3,19 @@ import { Link } from 'react-router-dom'
 import { AnimeContext } from '../../context'
 import Table from '../partials/table'
 import { formatDate } from '../../services/utilsService'
-import auth from '../../services/authService'
+import withAuth from '../hoc/withAuth'
 import { toast } from 'react-toastify'
-import { sortBy } from '../../services/utilsService'
-import { SET_ITEMS, SET_PAGENUM, SET_REFRESH } from '../../hooks/types'
-import { deleteAnime } from '../../services/animeService'
 import Paginate from './paginate'
 
-const Animes = props => {
+const Animes = ({ auth, ...props }) => {
   const {
     state: { animes, pageNum },
-    dispatch
+    onDelete,
+    onRefresh,
+    onPageChange,
+    onSort
   } = useContext(AnimeContext)
+
   const [sortColumn, setSortColumn] = useState({ path: 'name', order: 'asc' })
 
   const columns = [
@@ -63,22 +64,16 @@ const Animes = props => {
       return
     }
 
-    let _animes = [...animes]
-
-    _animes = _animes.filter(a => a.id !== anime.id)
-
-    dispatch({ type: SET_ITEMS, payload: _animes })
-
-    await deleteAnime(anime.id)
-
-    if (_animes.length === 0) {
+    if (!(await onDelete(anime))) {
+      onPageChange(pageNum - 1)
       const { start, end, setStart, setEnd } = props
-      dispatch({ type: SET_PAGENUM, payload: pageNum - 1 })
-      setStart(start - 1)
+      if (start > 1) {
+        setStart(start - 1)
+      }
       setEnd(end - 1)
       return
     }
-    dispatch({ type: SET_REFRESH, payload: new Date() })
+    onRefresh()
   }
 
   const renderItemsName = items => {
@@ -100,7 +95,7 @@ const Animes = props => {
   }
 
   const handleSort = sortColumn => {
-    dispatch({ type: SET_ITEMS, payload: sortBy(animes, sortColumn) })
+    onSort(sortColumn)
     setSortColumn(sortColumn)
   }
 
@@ -124,4 +119,4 @@ const Animes = props => {
   )
 }
 
-export default Animes
+export default withAuth(Animes)

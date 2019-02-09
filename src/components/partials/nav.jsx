@@ -1,9 +1,9 @@
 import React from 'react'
 import { Link, NavLink } from 'react-router-dom'
-import auth from '../../services/authService'
 import { capitalize } from '../../services/utilsService'
+import withAuth from '../hoc/withAuth'
 
-const Nav = props => {
+const Nav = ({ auth, ...props }) => {
   const handleLogout = () => {
     auth.logout()
   }
@@ -80,4 +80,4 @@ const Nav = props => {
   )
 }
 
-export default Nav
+export default withAuth(Nav)

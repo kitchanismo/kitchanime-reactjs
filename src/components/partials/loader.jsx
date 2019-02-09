@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Spinner = ({ isLoaded, children }) => {
+const Loader = ({ isLoaded, children }) => {
   return (
     <React.Fragment>
       {!isLoaded && (
@@ -25,4 +25,4 @@ const Spinner = ({ isLoaded, children }) => {
   )
 }
 
-export default Spinner
+export default Loader

@@ -1,8 +1,8 @@
 import React from 'react'
 import { Route, Redirect } from 'react-router-dom'
-import auth from '../../services/authService'
+import withAuth from '../hoc/withAuth'
 
-const AuthRoute = ({ path, component: Component, render, ...rest }) => {
+const AuthRoute = ({ auth, path, component: Component, render, ...rest }) => {
   return (
     <Route
       {...rest}
@@ -22,4 +22,4 @@ const AuthRoute = ({ path, component: Component, render, ...rest }) => {
   )
 }
 
-export default AuthRoute
+export default withAuth(AuthRoute)

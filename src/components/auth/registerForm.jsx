@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import Joi from 'joi-browser'
 import { capitalize } from './../../services/utilsService'
-import auth from './../../services/authService'
+import withAuth from '../hoc/withAuth'
 import { toast } from 'react-toastify'
 import Form from '../partials/form'
 
-const RegisterForm = props => {
+const RegisterForm = ({ auth, ...props }) => {
   const [user, setUser] = useState({
     username: '',
     password: '',
@@ -109,4 +109,4 @@ const RegisterForm = props => {
   )
 }
 
-export default RegisterForm
+export default withAuth(RegisterForm)
