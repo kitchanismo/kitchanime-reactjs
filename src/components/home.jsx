@@ -1,11 +1,11 @@
 import React, { useContext, memo, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import AnimesTable from './animes/animesTable'
+import { pagination } from '../config.json'
 import { AnimeContext } from './../context'
+import AnimesTable from './animes/animesTable'
 import Loader from './partials/loader'
 import withAuth from './hoc/withAuth'
 import SearchForm from './searchForm'
-import { pagination } from '../config.json'
 import HeaderTitle from './partials/headerTitle'
 
 const Home = ({ auth }) => {

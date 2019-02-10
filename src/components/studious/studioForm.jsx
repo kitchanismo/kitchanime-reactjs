@@ -16,9 +16,17 @@ const StudioForm = props => {
   }
 
   const handleSubmit = async () => {
-    await postStudio(studio)
-    toast.success('Added')
-    handleBack()
+    try {
+      await postStudio(studio)
+      toast.success('Added')
+      handleBack()
+    } catch ({ response }) {
+      if (response && response.data.status.code === 400) {
+        const _errors = { ...errors }
+        _errors.name = response.data.status.error
+        setErrors(_errors)
+      }
+    }
   }
 
   const handleBack = () => props.history.goBack()

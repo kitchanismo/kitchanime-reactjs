@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react'
 import { AnimeContext } from './../context'
-import { SEARCH_ITEMS, SET_PAGENUM } from '../hooks/types'
 import { pagination } from '../config.json'
 
 const SearchForm = props => {
