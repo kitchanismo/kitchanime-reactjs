@@ -6,51 +6,11 @@ import Select from 'react-select'
 import 'react-datepicker/dist/react-datepicker.css'
 
 const Form = props => {
+  const [isDisable, setIsDisable] = useState(false)
+
   const { data, setData } = props.data || {}
   const { errors, setErrors } = props.errors || {}
   const schema = { ...props.schema }
-
-  const renderDatePicker = (name, label, rest) => {
-    return (
-      <div className="form-group">
-        <label htmlFor={name}>{label}</label>
-        <div>
-          <DatePicker
-            peekNextMonth
-            showMonthDropdown
-            showYearDropdown
-            dropdownMode="select"
-            placeholderText="Select a date"
-            className="form-control"
-            value={data[name]}
-            {...rest}
-          />
-        </div>
-        {errors[name] && (
-          <div className="alert p-2 mt-2 alert-danger">{errors[name]}</div>
-        )}
-      </div>
-    )
-  }
-
-  const renderTextArea = (name, label, row = 3) => {
-    return (
-      <div className="form-group">
-        <label htmlFor={name}>{label}</label>
-        <textarea
-          value={data[name]}
-          onChange={handleChange}
-          className="form-control"
-          id={name}
-          rows={row}
-          name={name}
-        />
-        {errors[name] && (
-          <div className="alert p-2 mt-2 alert-danger">{errors[name]}</div>
-        )}
-      </div>
-    )
-  }
 
   const validate = () => {
     const options = { abortEarly: false }
@@ -80,7 +40,9 @@ const Form = props => {
     setErrors(errors || {})
     if (errors) return
 
+    setIsDisable(true)
     doSubmit(e, data)
+    setIsDisable(false)
   }
 
   const handleChange = ({ currentTarget: input }) => {
@@ -142,7 +104,7 @@ const Form = props => {
   const renderButton = label => {
     return (
       <button
-        disabled={validate() || Object.keys(errors).length > 0}
+        disabled={validate() || Object.keys(errors).length > 0 || isDisable}
         className="btn btn-primary mt-3"
       >
         {label}
@@ -150,6 +112,47 @@ const Form = props => {
     )
   }
 
+  const renderDatePicker = (name, label, rest) => {
+    return (
+      <div className="form-group">
+        <label htmlFor={name}>{label}</label>
+        <div>
+          <DatePicker
+            peekNextMonth
+            showMonthDropdown
+            showYearDropdown
+            dropdownMode="select"
+            placeholderText="Select a date"
+            className="form-control"
+            value={data[name]}
+            {...rest}
+          />
+        </div>
+        {errors[name] && (
+          <div className="alert p-2 mt-2 alert-danger">{errors[name]}</div>
+        )}
+      </div>
+    )
+  }
+
+  const renderTextArea = (name, label, row = 3) => {
+    return (
+      <div className="form-group">
+        <label htmlFor={name}>{label}</label>
+        <textarea
+          value={data[name]}
+          onChange={handleChange}
+          className="form-control"
+          id={name}
+          rows={row}
+          name={name}
+        />
+        {errors[name] && (
+          <div className="alert p-2 mt-2 alert-danger">{errors[name]}</div>
+        )}
+      </div>
+    )
+  }
   return (
     <form onSubmit={e => handleSubmit(e, props.onSubmit)}>
       {props.children({

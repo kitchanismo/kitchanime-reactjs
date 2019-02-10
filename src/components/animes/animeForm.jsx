@@ -23,8 +23,8 @@ const AnimeForm = ({ auth, ...props }) => {
     id: 0,
     title: '',
     description: '',
-    season: null,
-    type: null,
+    season: '',
+    type: '',
     genres: [],
     studios: [],
     releaseDate: ''
@@ -117,7 +117,7 @@ const AnimeForm = ({ auth, ...props }) => {
 
     _anime.id ? toast.success('Updated') : toast.success('Added')
 
-    props.history.push('/')
+    props.history.replace('/')
 
     context.onRefresh()
   }
@@ -137,6 +137,16 @@ const AnimeForm = ({ auth, ...props }) => {
     _anime.releaseDate = formatDate(date)
 
     setAnime(_anime)
+  }
+
+  const renderAdd = to => {
+    return (
+      <span className="">
+        <Link to={to}>
+          <button className="add-btn btn  btn-secondary btn-md ">...</button>
+        </Link>
+      </span>
+    )
   }
 
   return (
@@ -194,7 +204,7 @@ const AnimeForm = ({ auth, ...props }) => {
                 </div>
 
                 <div className="row">
-                  <div className="col-6">
+                  <div className="col-11">
                     {renderSelect(
                       'genreIds',
                       'Genres',
@@ -204,7 +214,11 @@ const AnimeForm = ({ auth, ...props }) => {
                       { isMulti: true }
                     )}
                   </div>
-                  <div className="col-6">
+                  <div className="col-1 mt-4">{renderAdd('/genres/new')}</div>
+                </div>
+
+                <div className="row">
+                  <div className="col-11">
                     {renderSelect(
                       'studioIds',
                       'Studios',
@@ -214,6 +228,7 @@ const AnimeForm = ({ auth, ...props }) => {
                       { isMulti: true }
                     )}
                   </div>
+                  <div className="col-1 mt-4">{renderAdd('/studios/new')}</div>
                 </div>
 
                 {renderInput('imageUrl', 'Image Url')}
@@ -223,6 +238,11 @@ const AnimeForm = ({ auth, ...props }) => {
             )
           }}
         </Form>
+        <style jsx>{`
+          .add-btn {
+            margin-top: 7px;
+          }
+        `}</style>
       </div>
     </Loader>
   )

@@ -1,4 +1,5 @@
 import { useEffect, useReducer } from 'react'
+import { mapToSelect, formatDate } from '../services/utilsService'
 import {
   getGenres,
   getStudios,
@@ -6,7 +7,6 @@ import {
   getTypes,
   getAnime
 } from '../services/animeService'
-import { mapToSelect, formatDate } from '../services/utilsService'
 
 export const SET_GENRES = 'SET_GENRES'
 export const SET_STUDIOS = 'SET_STUDIOS'
