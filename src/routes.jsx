@@ -18,9 +18,9 @@ const Routes = () => {
       <AuthRoute path="/home" component={Home} />
       <GuestRoute path="/login" component={LoginForm} />
       <GuestRoute path="/register" component={RegisterForm} />
-      <AuthRoute path="/animes/:id" component={AnimeForm} />
-      <AuthRoute path="/studios/new" component={StudioForm} />
-      <AuthRoute path="/genres/new" component={GenreForm} />
+      <AuthRoute isAdmin path="/animes/:id" component={AnimeForm} />
+      <AuthRoute isAdmin path="/studios/new" component={StudioForm} />
+      <AuthRoute isAdmin path="/genres/new" component={GenreForm} />
       <AuthRoute path="/genres" component={GenresTable} />
       <Route path="/not-found" component={NotFound} />>
       <Redirect from="/" exact to="/home" />

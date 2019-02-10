@@ -2,7 +2,14 @@ import React from 'react'
 import { Route, Redirect } from 'react-router-dom'
 import withAuth from '../hoc/withAuth'
 
-const AuthRoute = ({ auth, path, component: Component, render, ...rest }) => {
+const AuthRoute = ({
+  isAdmin = false,
+  auth,
+  path,
+  component: Component,
+  render,
+  ...rest
+}) => {
   return (
     <Route
       {...rest}
@@ -16,6 +23,10 @@ const AuthRoute = ({ auth, path, component: Component, render, ...rest }) => {
               }}
             />
           )
+
+        if (isAdmin && !auth.isAdmin()) {
+          return <Redirect to="/not-found" />
+        }
         return Component ? <Component {...props} /> : render(props)
       }}
     />
