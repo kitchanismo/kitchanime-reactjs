@@ -1,10 +1,8 @@
 import React, { useState } from 'react'
 import Form from '../partials/form'
 import Joi from 'joi-browser'
-import { Link } from 'react-router-dom'
 import { postStudio } from '../../services/studioService'
 import { toast } from 'react-toastify'
-import { capitalize } from '../../services/utilsService'
 
 const StudioForm = props => {
   const [studio, setStudio] = useState({ id: 0, name: '' })
@@ -18,14 +16,7 @@ const StudioForm = props => {
   }
 
   const handleSubmit = async () => {
-    const { id } = await postStudio(studio)
-    // const _studio = {
-    //   id,
-    //   value: studio.name,
-    //   label: capitalize(studio.name)
-    // }
-
-    // props.location.onAddSelected(_studio)
+    await postStudio(studio)
     toast.success('Added')
     handleBack()
   }

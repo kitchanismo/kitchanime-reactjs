@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import Form from '../partials/form'
 import Joi from 'joi-browser'
-import { Link } from 'react-router-dom'
 import { postGenre } from '../../services/genreService'
 import { toast } from 'react-toastify'
 
