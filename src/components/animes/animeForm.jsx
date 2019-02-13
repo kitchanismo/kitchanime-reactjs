@@ -10,6 +10,7 @@ import { AnimeContext } from './../../context'
 import { formatDate, mapToSelect } from '../../services/utilsService'
 import { toast } from 'react-toastify'
 import { getAnime, putAnime, postAnime } from './../../services/animeService'
+import BackButton from './../partials/backButton'
 
 const AnimeForm = ({ auth, ...props }) => {
   const context = useContext(AnimeContext)
@@ -155,9 +156,7 @@ const AnimeForm = ({ auth, ...props }) => {
         <h1>{id !== 'new' ? 'Edit Form' : 'Add Form'}</h1>
 
         <span className=" d-flex justify-content-end">
-          <Link to="/">
-            <button className="btn fa fa-arrow-left btn-secondary btn-lg " />
-          </Link>
+          <BackButton {...props} />
         </span>
         <Form
           data={{ data: anime, setData: setAnime }}
@@ -233,7 +232,7 @@ const AnimeForm = ({ auth, ...props }) => {
 
                 {renderInput('imageUrl', 'Image Url')}
 
-                {renderButton(id !== 'new' ? 'Update' : 'Save')}
+                {renderButton(id !== 'new' ? 'UPDATE' : 'SAVE', 'fa fa-save')}
               </React.Fragment>
             )
           }}
