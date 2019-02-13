@@ -21,7 +21,7 @@ const reducer = (state, action) => {
     case SET_TOTAL:
       return { ...state, total: payload }
     case SET_REFRESH:
-      return { ...state, refresh: payload }
+      return { ...state, toggle: payload }
     case SEARCH_ITEMS:
       return { ...state, title: payload }
     default:
@@ -49,36 +49,33 @@ const usePagination = ({
     pages: 0,
     total: 0,
     take,
-    refresh: false
+    toggle: false
   }
-  const [{ refresh, title, pageNum, ...rest }, dispatch] = useReducer(
+  const [{ toggle, title, pageNum, ...rest }, dispatch] = useReducer(
     reducer,
     initialState
   )
 
-  useEffect(
-    () => {
-      request(pageNum, take, title)
-        .then(response => {
-          dispatch({ type: SET_ITEMS, payload: response[data] })
-          dispatch({ type: SET_PAGES, payload: response[pages] })
-          dispatch({ type: SET_TOTAL, payload: response[total] })
-        })
-        .catch(({ response }) => {
-          if (response && response.status === 404) {
-            dispatch({ type: SET_ITEMS, payload: [] })
-            dispatch({ type: SET_PAGES, payload: 0 })
-            dispatch({ type: SET_TOTAL, payload: 0 })
-            dispatch({ type: SET_PAGENUM, payload: 1 })
-            toast.error('No result/s found')
-          }
-        })
-    },
-    [refresh, title, pageNum]
-  )
+  useEffect(() => {
+    request(pageNum, take, title)
+      .then(response => {
+        dispatch({ type: SET_ITEMS, payload: response[data] })
+        dispatch({ type: SET_PAGES, payload: response[pages] })
+        dispatch({ type: SET_TOTAL, payload: response[total] })
+      })
+      .catch(({ response }) => {
+        if (response && response.status === 404) {
+          dispatch({ type: SET_ITEMS, payload: [] })
+          dispatch({ type: SET_PAGES, payload: 0 })
+          dispatch({ type: SET_TOTAL, payload: 0 })
+          dispatch({ type: SET_PAGENUM, payload: 1 })
+          toast.error('No result/s found')
+        }
+      })
+  }, [toggle, title, pageNum])
 
   return {
-    state: { refresh, pageNum, take, ...rest },
+    state: { toggle, pageNum, take, ...rest },
     dispatch
   }
 }

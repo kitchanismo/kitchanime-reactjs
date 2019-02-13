@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
-import { AnimeContext } from './../context'
-import { pagination } from '../config.json'
+import { AnimeContext } from '../../context'
+import { pagination } from '../../config.json'
 
 const SearchForm = props => {
   const { onPageChange, onSearch } = useContext(AnimeContext)

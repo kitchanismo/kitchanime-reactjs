@@ -18,7 +18,7 @@ const AnimeProvider = props => {
   } = usePagination({ request: getPagedAnimes, take: pagination.perPage })
 
   const handleRefresh = () => {
-    dispatch({ type: SET_REFRESH, payload: new Date() })
+    dispatch({ type: SET_REFRESH, payload: toggle => !toggle })
   }
 
   const handlePageChange = pageNum => {
