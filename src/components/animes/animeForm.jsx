@@ -25,9 +25,9 @@ const AnimeForm = ({ auth, ...props }) => {
     description: '',
     season: '',
     type: '',
+    releaseDate: '',
     genres: [],
-    studios: [],
-    releaseDate: ''
+    studios: []
   })
 
   const [errors, setErrors] = useState({})
@@ -104,8 +104,8 @@ const AnimeForm = ({ auth, ...props }) => {
 
     _anime.genreIds = selectedGenres.map(g => g.id) || []
     _anime.studioIds = selectedStudios.map(s => s.id) || []
-    _anime.season = selectedSeason ? selectedSeason.value : ''
-    _anime.type = selectedType ? selectedType.value : ''
+    _anime.season = selectedSeason ? selectedSeason.value : null
+    _anime.type = selectedType ? selectedType.value : null
 
     if (_anime.releaseDate) {
       _anime.releaseDate = new Date(_anime.releaseDate).toISOString()
@@ -178,14 +178,6 @@ const AnimeForm = ({ auth, ...props }) => {
 
                 {renderTextArea('description', 'Description')}
 
-                {renderSelect(
-                  'type',
-                  'Type',
-                  selectedType,
-                  handleChangeType,
-                  types
-                )}
-
                 <div className="row">
                   <div className="col-6">
                     {renderSelect(
@@ -202,6 +194,14 @@ const AnimeForm = ({ auth, ...props }) => {
                     })}
                   </div>
                 </div>
+
+                {renderSelect(
+                  'type',
+                  'Type',
+                  selectedType,
+                  handleChangeType,
+                  types
+                )}
 
                 <div className="row">
                   <div className="col-11">
