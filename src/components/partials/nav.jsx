@@ -67,7 +67,7 @@ const Nav = ({ auth, ...props }) => {
             </ul>
           </div>
         </div>
-        <style jsx>{`
+        <style jsx="">{`
           .navbar {
             margin-bottom: 20px;
           }

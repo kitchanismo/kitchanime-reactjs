@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { ToastContainer } from 'react-toastify'
 import AnimeProvider from './providers/animeProvider'
 import Nav from './components/partials/nav'

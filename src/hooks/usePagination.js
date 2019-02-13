@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useRef } from 'react'
+import { useEffect, useReducer } from 'react'
 import { toast } from 'react-toastify'
 import {
   SET_ITEMS,

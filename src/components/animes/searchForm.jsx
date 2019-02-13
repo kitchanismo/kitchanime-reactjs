@@ -28,12 +28,11 @@ const SearchForm = props => {
         />
         <button className="btn btn-primary ml-2 mb-2">Search</button>
       </form>
-      <style jxs>{`
-      form {
-        display:flex;
-      }
-     
-     `}</style>
+      <style jsx="">{`
+        form {
+          display: flex;
+        }
+      `}</style>
     </React.Fragment>
   )
 }

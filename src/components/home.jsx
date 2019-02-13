@@ -1,5 +1,4 @@
-import React, { useContext, memo, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useContext, memo } from 'react'
 
 import { AnimeContext } from './../context'
 import AnimesTable from './animes/animesTable'

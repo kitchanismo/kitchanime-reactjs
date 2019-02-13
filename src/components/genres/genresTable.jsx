@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom'
 import Table from './../partials/table'
 import { SET_ITEMS } from './../../hooks/types'
 import HeaderTitle from '../partials/headerTitle'
-import Form from '../partials/form'
 
 const GenresTable = () => {
   const {

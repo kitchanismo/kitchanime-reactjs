@@ -31,16 +31,7 @@ export default {
   setJwt
 }
 
-function saveJwt({ token, refreshToken }) {
-  localStorage.setItem('access-token', token)
-
-  localStorage.setItem('refresh-token', refreshToken)
-}
-let isRefreshing = false
-
 function throwError(error) {
-  const config = error.config
-
   const expectedError =
     error.response &&
     error.response.status >= 400 &&

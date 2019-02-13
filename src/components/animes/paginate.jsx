@@ -1,8 +1,7 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { AnimeContext } from '../../context'
 import { createArray } from '../../services/utilsService'
 import { pagination } from '../../config.json'
-import { SET_PAGENUM, SET_REFRESH } from '../../hooks/types'
 
 const Paginate = ({ start, end, setStart, setEnd }) => {
   const { pageNumbers: PAGE_NUMBERS } = pagination
@@ -156,7 +155,7 @@ const Paginate = ({ start, end, setStart, setEnd }) => {
           </nav>
         </div>
         {pageOf()}
-        <style jsx>
+        <style jsx="">
           {`
             .pages {
               text-align: right;

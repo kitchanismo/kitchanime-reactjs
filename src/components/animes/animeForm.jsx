@@ -238,7 +238,7 @@ const AnimeForm = ({ auth, ...props }) => {
             )
           }}
         </Form>
-        <style jsx>{`
+        <style jsx="">{`
           .add-btn {
             margin-top: 7px;
           }

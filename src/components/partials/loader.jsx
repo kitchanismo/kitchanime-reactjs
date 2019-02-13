@@ -12,7 +12,7 @@ const Loader = ({ isLoaded, children }) => {
       )}
 
       {isLoaded && children}
-      <style jsx>{`
+      <style jsx="">{`
         .spin {
           position: fixed;
           z-index: 1031;
