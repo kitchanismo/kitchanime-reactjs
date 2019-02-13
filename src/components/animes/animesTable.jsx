@@ -56,12 +56,18 @@ const Animes = ({ auth, ...props }) => {
       content: anime => (
         <div className="">
           <Link to={`/animes/${anime.id}`}>
-            <button className="btn btn-warning btn-sm mr-1 fa fa-pencil text-white" />
+            <button className="btn btn-warning btn-sm mr-1 text-white">
+              <span className="fa fa-pencil mr-1" />
+              EDIT
+            </button>
           </Link>
           <button
             onClick={async () => await doDelete(anime)}
-            className="btn btn-danger btn-sm fa fa-trash text-white"
-          />
+            className="btn btn-danger btn-sm text-white"
+          >
+            <span className="fa fa-trash mr-1" />
+            DELETE
+          </button>
         </div>
       )
     }
@@ -125,7 +131,10 @@ const Animes = ({ auth, ...props }) => {
     return (
       auth.isAdmin() && (
         <Link to="/animes/new">
-          <button className="btn fa fa-plus btn-success btn-lg mr-2 mt-1" />
+          <button className="btn btn-success mr-2 mt-1">
+            <span className="fa fa-plus mr-1" />
+            NEW ANIME
+          </button>
         </Link>
       )
     )
@@ -136,8 +145,11 @@ const Animes = ({ auth, ...props }) => {
         <Link to="/">
           <button
             onClick={() => onSearch('')}
-            className="btn fa fa-refresh btn-secondary btn-lg mt-1"
-          />
+            className="btn btn-secondary mt-1"
+          >
+            <span className="fa fa-refresh mr-1" />
+            REFRESH
+          </button>
         </Link>
       </div>
     )
