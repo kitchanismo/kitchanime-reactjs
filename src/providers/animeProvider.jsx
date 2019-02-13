@@ -26,15 +26,19 @@ const AnimeProvider = props => {
   }
 
   const handleDelete = async anime => {
-    let _animes = [...animes]
+    let originalAnimes = [...animes]
 
-    _animes = _animes.filter(a => a.id !== anime.id)
+    try {
+      const _animes = originalAnimes.filter(a => a.id !== anime.id)
 
-    dispatch({ type: SET_ITEMS, payload: _animes })
+      dispatch({ type: SET_ITEMS, payload: _animes })
 
-    await deleteAnime(anime.id)
-
-    return _animes.length > 0
+      await deleteAnime(anime.id)
+      return _animes.length > 0
+    } catch (error) {
+      dispatch({ type: SET_ITEMS, payload: originalAnimes })
+      return originalAnimes.length > 0
+    }
   }
 
   const handleSort = sortColumn => {

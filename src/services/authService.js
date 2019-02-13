@@ -23,13 +23,15 @@ async function register(user) {
   return true
 }
 
-function logout() {
+async function logout() {
   http.setJwt(jwt())
+  removeTokens()
+  await http.post('/token/revoke', { refreshToken: jwt().refreshToken })
+}
+
+function removeTokens() {
   localStorage.removeItem('refresh-token')
   localStorage.removeItem('access-token')
-  http
-    .post('/token/revoke', { refreshToken: jwt().refreshToken })
-    .then(res => {})
 }
 
 function getDecodeToken() {

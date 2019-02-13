@@ -41,10 +41,6 @@ let isRefreshing = false
 function throwError(error) {
   const config = error.config
 
-  if (error.response && error.response.data.status.name === 'ExpiredJwtToken') {
-    toast.error('jwt is expired')
-    return Promise.reject(error)
-  }
   const expectedError =
     error.response &&
     error.response.status >= 400 &&
@@ -52,6 +48,16 @@ function throwError(error) {
   if (!expectedError) {
     toast.error('An unexpected error occurrred.')
   }
+
+  if (
+    error.response &&
+    error.response.data.status &&
+    error.response.data.status.name === 'ExpiredJwtToken'
+  ) {
+    toast.error('jwt is expired')
+    return Promise.reject(error)
+  }
+
   return Promise.reject(error)
 
   // if (error.response && error.response.data.status.name === 'ExpiredJwtToken') {

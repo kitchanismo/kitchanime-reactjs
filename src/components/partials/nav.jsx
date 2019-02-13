@@ -4,8 +4,8 @@ import { capitalize } from '../../services/utilsService'
 import withAuth from '../hoc/withAuth'
 
 const Nav = ({ auth, ...props }) => {
-  const handleLogout = () => {
-    auth.logout()
+  const handleLogout = async () => {
+    await auth.logout()
   }
   return (
     <React.Fragment>
@@ -73,7 +73,8 @@ const Nav = ({ auth, ...props }) => {
           }
           .fa-user {
             margin-top: 12px !important;
-          }
+          }import withAuth from './../auth/registerForm';
+
         `}</style>
       </nav>
     </React.Fragment>
