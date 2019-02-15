@@ -67,7 +67,6 @@ const usePagination = ({
   )
 
   useEffect(() => {
-    dispatch({ type: SET_ITEMS, payload: [] })
     request(pageNum, take, title)
       .then(response => {
         dispatch({ type: SET_ITEMS, payload: response[data] })
@@ -84,6 +83,10 @@ const usePagination = ({
         }
       })
   }, [toggle, title, pageNum])
+
+  useEffect(() => {
+    dispatch({ type: SET_ITEMS, payload: [] })
+  }, [title, pageNum])
 
   return {
     state: { toggle, pageNum, take, ...rest },
