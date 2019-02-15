@@ -3,14 +3,16 @@ import { AnimeContext } from '../../context'
 import { pagination } from '../../config.json'
 
 const SearchForm = props => {
-  const { onPageChange, onSearch } = useContext(AnimeContext)
+  const { onPageChange, onSearch, onSetEnd, onSetStart } = useContext(
+    AnimeContext
+  )
   const [title, setTitle] = useState('')
 
   const handleSubmit = async e => {
     e.preventDefault()
     if (!title) return
-    props.setStart(1)
-    props.setEnd(pagination.pageNumbers)
+    onSetStart(1)
+    onSetEnd(pagination.pageNumbers)
     onPageChange(1)
     onSearch(title)
   }
