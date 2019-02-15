@@ -11,7 +11,7 @@ import Loader from './../partials/loader'
 
 const Animes = ({ auth }) => {
   const {
-    state: { animes, pageNum, total, start, end },
+    state: { animes, pageNum, start, end },
     onDelete,
     onRefresh,
     onPageChange,
@@ -155,7 +155,7 @@ const Animes = ({ auth }) => {
       <div className="col-12 mb-2 mt-3" style={{ padding: 0 }}>
         <SearchForm />
       </div>
-      <Loader isLoaded={total > 0}>
+      <Loader isLoaded={animes.length > 0}>
         <Table
           columns={withColumnActions()}
           data={transformAnimes()}
