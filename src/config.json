@@ -1,7 +1,7 @@
 {
   "appUrl": "http://127.0.0.1:3333",
   "pagination": {
-    "perPage": 3,
+    "perPage": 10,
     "pageNumbers": 3
   }
 }
