@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { pagination } from '../../config.json'
 import { AnimeContext } from '../../context'
 import Table from '../partials/table'
 import { formatDate } from '../../services/utilsService'
@@ -10,20 +9,17 @@ import Paginate from './paginate'
 import SearchForm from './searchForm'
 import Loader from './../partials/loader'
 
-const Animes = ({ auth, ...props }) => {
-  const { pageNumbers: PAGE_NUMBERS } = pagination
-
+const Animes = ({ auth }) => {
   const {
-    state: { animes, pageNum, total },
+    state: { animes, pageNum, total, start, end },
     onDelete,
     onRefresh,
     onPageChange,
     onSort,
-    onSearch
+    onSearch,
+    onSetStart,
+    onSetEnd
   } = useContext(AnimeContext)
-
-  const [start, setStart] = useState(1)
-  const [end, setEnd] = useState(PAGE_NUMBERS)
 
   const [sortColumn, setSortColumn] = useState({ path: 'name', order: 'asc' })
 
@@ -82,9 +78,9 @@ const Animes = ({ auth, ...props }) => {
     if (!(await onDelete(anime))) {
       onPageChange(pageNum - 1)
       if (start > 1) {
-        setStart(start - 1)
+        onSetStart(start - 1)
       }
-      setEnd(end - 1)
+      onSetEnd(end - 1)
       return
     }
     onRefresh()
@@ -118,13 +114,6 @@ const Animes = ({ auth, ...props }) => {
 
     const _columns = [...columns]
     return _columns.filter(c => c.key !== 'actions')
-  }
-
-  const paginateProps = {
-    start,
-    end,
-    setStart,
-    setEnd
   }
 
   const renderAddBtn = () => {
@@ -164,7 +153,7 @@ const Animes = ({ auth, ...props }) => {
         </div>
       </div>
       <div className="col-12 mb-2 mt-3" style={{ padding: 0 }}>
-        <SearchForm {...paginateProps} />
+        <SearchForm />
       </div>
       <Loader isLoaded={total > 0}>
         <Table
@@ -173,7 +162,7 @@ const Animes = ({ auth, ...props }) => {
           sortColumn={sortColumn}
           onSort={handleSort}
         />
-        <Paginate {...paginateProps} />
+        <Paginate />
       </Loader>
     </React.Fragment>
   )

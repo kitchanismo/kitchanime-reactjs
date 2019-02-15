@@ -26,11 +26,17 @@ const SearchForm = props => {
           className="form-control"
           placeholder="Search title"
         />
-        <button className="btn btn-primary ml-2 mb-2">Search</button>
+        <button className="btn-search btn btn-primary ml-2">
+          <span className="fa fa-search mr-1" />
+          SEARCH
+        </button>
       </form>
       <style jsx="">{`
         form {
           display: flex;
+        }
+        .btn-search {
+          width: 13%;
         }
       `}</style>
     </React.Fragment>

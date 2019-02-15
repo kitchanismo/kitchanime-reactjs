@@ -3,6 +3,7 @@ import Form from '../partials/form'
 import Joi from 'joi-browser'
 import { postGenre } from '../../services/genreService'
 import { toast } from 'react-toastify'
+import BackButton from './../partials/backButton'
 
 const GenreForm = props => {
   const [genre, setGenre] = useState({ id: 0, name: '' })
@@ -36,10 +37,7 @@ const GenreForm = props => {
       <div className="col-6 offset-3">
         <h1>Add Genre</h1>
         <span className=" d-flex justify-content-end">
-          <button
-            onClick={handleBack}
-            className="btn fa fa-arrow-left btn-secondary btn-lg "
-          />
+          <BackButton {...props} />
         </span>
         <Form
           data={{ data: genre, setData: setGenre }}

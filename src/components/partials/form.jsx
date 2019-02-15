@@ -101,12 +101,13 @@ const Form = props => {
     )
   }
 
-  const renderButton = label => {
+  const renderButton = (label, icon) => {
     return (
       <button
         disabled={validate() || Object.keys(errors).length > 0 || isDisable}
         className="btn btn-primary mt-3"
       >
+        <span className={`${icon} mr-1`} />
         {label}
       </button>
     )

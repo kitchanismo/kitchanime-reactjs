@@ -1,12 +1,16 @@
 import { useEffect, useReducer } from 'react'
 import { toast } from 'react-toastify'
+import { pagination } from '../config.json'
+
 import {
   SET_ITEMS,
   SET_PAGENUM,
   SET_PAGES,
   SET_TOTAL,
   SET_REFRESH,
-  SEARCH_ITEMS
+  SEARCH_ITEMS,
+  SET_START,
+  SET_END
 } from './types'
 
 const reducer = (state, action) => {
@@ -20,6 +24,10 @@ const reducer = (state, action) => {
       return { ...state, pages: payload }
     case SET_TOTAL:
       return { ...state, total: payload }
+    case SET_START:
+      return { ...state, start: payload }
+    case SET_END:
+      return { ...state, end: payload }
     case SET_REFRESH:
       return { ...state, toggle: payload }
     case SEARCH_ITEMS:
@@ -49,7 +57,9 @@ const usePagination = ({
     pages: 0,
     total: 0,
     take,
-    toggle: false
+    toggle: false,
+    start: 1,
+    end: pagination.pageNumbers
   }
   const [{ toggle, title, pageNum, ...rest }, dispatch] = useReducer(
     reducer,

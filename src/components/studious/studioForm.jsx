@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, memo } from 'react'
 import Form from '../partials/form'
 import Joi from 'joi-browser'
 import { postStudio } from '../../services/studioService'
 import { toast } from 'react-toastify'
+import BackButton from './../partials/backButton'
 
 const StudioForm = props => {
   const [studio, setStudio] = useState({ id: 0, name: '' })
@@ -36,10 +37,7 @@ const StudioForm = props => {
       <div className="col-6 offset-3">
         <h1>Add Studio</h1>
         <span className=" d-flex justify-content-end">
-          <button
-            onClick={handleBack}
-            className="btn fa fa-arrow-left btn-secondary btn-lg "
-          />
+          <BackButton {...props} />
         </span>
         <Form
           data={{ data: studio, setData: setStudio }}
@@ -61,4 +59,4 @@ const StudioForm = props => {
   )
 }
 
-export default StudioForm
+export default memo(StudioForm)

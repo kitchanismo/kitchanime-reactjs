@@ -32,14 +32,6 @@ export default {
 }
 
 function throwError(error) {
-  const expectedError =
-    error.response &&
-    error.response.status >= 400 &&
-    error.response.status < 500
-  if (!expectedError) {
-    toast.error('An unexpected error occurrred.')
-  }
-
   if (
     error.response &&
     error.response.data.status &&
@@ -47,6 +39,14 @@ function throwError(error) {
   ) {
     toast.error('jwt is expired')
     return Promise.reject(error)
+  }
+
+  const expectedError =
+    error.response &&
+    error.response.status >= 400 &&
+    error.response.status < 500
+  if (!expectedError) {
+    toast.error('An unexpected error occurrred.')
   }
 
   return Promise.reject(error)
