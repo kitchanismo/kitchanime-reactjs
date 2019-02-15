@@ -101,26 +101,29 @@ const AnimeForm = ({ auth, ...props }) => {
       return
     }
 
-    const _anime = { ...anime }
+    const _anime = getNewAnime(anime)
 
+    _anime.id ? await putAnime(_anime.id, _anime) : await postAnime(_anime)
+
+    props.history.replace('/')
+
+    _anime.id ? toast.success('Updated') : toast.success('Added')
+
+    context.onRefresh()
+  }
+
+  const getNewAnime = anime => {
+    const _anime = { ...anime }
     _anime.genreIds = selectedGenres.map(g => g.id) || []
     _anime.studioIds = selectedStudios.map(s => s.id) || []
     _anime.season = selectedSeason ? selectedSeason.value : null
     _anime.type = selectedType ? selectedType.value : null
-
     if (_anime.releaseDate) {
       _anime.releaseDate = new Date(_anime.releaseDate).toISOString()
     } else {
       delete _anime.releaseDate
     }
-
-    _anime.id ? await putAnime(_anime.id, _anime) : await postAnime(_anime)
-
-    _anime.id ? toast.success('Updated') : toast.success('Added')
-
-    props.history.replace('/')
-
-    context.onRefresh()
+    return _anime
   }
 
   const handleChangeGenres = selectedGenres => setSelectedGenres(selectedGenres)

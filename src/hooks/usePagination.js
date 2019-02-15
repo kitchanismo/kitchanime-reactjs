@@ -37,13 +37,6 @@ const reducer = (state, action) => {
   }
 }
 
-// customize the properties of response data in the usePagination arguments
-//
-//
-// consume usePagination e.g.
-// const { state: { items: movies, pageNum, pages, total }, dispatch}
-// = usePagination({ request: getMovies, take: 10, total: 'count', pages: 'pagesCount', data: 'movies' })
-
 const usePagination = ({
   request,
   data = 'data',
