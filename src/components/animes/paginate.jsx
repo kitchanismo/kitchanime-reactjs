@@ -3,40 +3,48 @@ import { AnimeContext } from '../../context'
 import { createArray } from '../../services/utilsService'
 import { pagination } from '../../config.json'
 
-const Paginate = ({ start, end, setStart, setEnd }) => {
+const Paginate = props => {
   const { pageNumbers: PAGE_NUMBERS } = pagination
 
   const {
-    state: { pageNum, pages },
-    onPageChange
+    state: { pageNum, pages, start, end },
+    onPageChange,
+    onSetStart,
+    onSetEnd
   } = useContext(AnimeContext)
-
-  const doNext = pageNum => {
-    handlePageChange(pageNum + 1)
-    if (end === pages) return
-    setStart(start + 1)
-    setEnd(end + 1)
-  }
 
   //reset start end when delete is 0 in paged
   useEffect(() => {
     if (end > pages && start !== 1) {
-      setStart(start - 1)
-      setEnd(end - 1)
+      handleDecrementStart()
+      handleDecrementEnd()
     }
   }, [pageNum])
+
+  const handleIncrementStart = () => onSetStart(start + 1)
+
+  const handleDecrementStart = () => onSetStart(start - 1)
+
+  const handleIncrementEnd = () => onSetEnd(end + 1)
+
+  const handleDecrementEnd = () => onSetEnd(end - 1)
 
   const handlePageChange = _pageNum => {
     if (pageNum === _pageNum) return
     onPageChange(_pageNum)
   }
-
+  const doNext = pageNum => {
+    handlePageChange(pageNum + 1)
+    if (end === pages) return
+    handleIncrementStart()
+    handleIncrementEnd()
+  }
   const doPrev = _pageNum => {
     handlePageChange(_pageNum - 1)
 
     if (start === 1) return
-    setStart(start - 1)
-    setEnd(end - 1)
+    handleDecrementStart()
+    handleDecrementEnd()
   }
 
   const renderPages = () => {
@@ -82,8 +90,8 @@ const Paginate = ({ start, end, setStart, setEnd }) => {
             onClick={() => {
               if (pageNum === 1) return
               handlePageChange(1)
-              setStart(1)
-              setEnd(PAGE_NUMBERS)
+              onSetStart(1)
+              onSetEnd(PAGE_NUMBERS)
             }}
           >
             {'first'}
@@ -121,8 +129,8 @@ const Paginate = ({ start, end, setStart, setEnd }) => {
             className="page-link"
             onClick={() => {
               handlePageChange(pages)
-              setStart(pages - (PAGE_NUMBERS - 1))
-              setEnd(pages)
+              onSetStart(pages - (PAGE_NUMBERS - 1))
+              onSetEnd(pages)
             }}
           >
             {'last'}

@@ -8,12 +8,14 @@ import {
   SET_REFRESH,
   SET_ITEMS,
   SET_PAGENUM,
-  SEARCH_ITEMS
+  SEARCH_ITEMS,
+  SET_START,
+  SET_END
 } from './../hooks/types'
 
 const AnimeProvider = props => {
   const {
-    state: { pageNum, items: animes, pages, total },
+    state: { pageNum, items: animes, pages, total, ...rest },
     dispatch
   } = usePagination({ request: getPagedAnimes, take: pagination.perPage })
 
@@ -49,15 +51,25 @@ const AnimeProvider = props => {
     dispatch({ type: SEARCH_ITEMS, payload: title })
   }
 
+  const handleSetStart = start => {
+    dispatch({ type: SET_START, payload: start })
+  }
+
+  const handleSetEnd = end => {
+    dispatch({ type: SET_END, payload: end })
+  }
+
   return (
     <AnimeContext.Provider
       value={{
-        state: { animes, pages, pageNum, total },
+        state: { animes, pages, pageNum, total, ...rest },
         onDelete: handleDelete,
         onRefresh: handleRefresh,
         onPageChange: handlePageChange,
         onSort: handleSort,
-        onSearch: handleSearch
+        onSearch: handleSearch,
+        onSetStart: handleSetStart,
+        onSetEnd: handleSetEnd
       }}
     >
       {props.children}
