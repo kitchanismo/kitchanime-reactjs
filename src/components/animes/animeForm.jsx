@@ -153,6 +153,11 @@ const AnimeForm = ({ auth, ...props }) => {
     )
   }
 
+  const labelButton = {
+    name: id !== 'new' ? 'UPDATE' : 'SAVE',
+    loading: id !== 'new' ? 'UPDATING...' : 'SAVING...'
+  }
+
   return (
     <Loader isLoaded={studios.length > 0 || id === 'new'}>
       <div className="col-8 offset-2">
@@ -235,7 +240,11 @@ const AnimeForm = ({ auth, ...props }) => {
 
                 {renderInput('imageUrl', 'Image Url')}
 
-                {renderButton(id !== 'new' ? 'UPDATE' : 'SAVE', 'fa fa-save')}
+                {renderButton(
+                  labelButton.name,
+                  'fa fa-save',
+                  labelButton.loading
+                )}
               </React.Fragment>
             )
           }}

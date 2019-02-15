@@ -41,8 +41,7 @@ const Form = props => {
     if (errors) return
 
     setIsDisable(true)
-    doSubmit(e, data)
-    setIsDisable(false)
+    doSubmit(e, data).then(() => setIsDisable(false))
   }
 
   const handleChange = ({ currentTarget: input }) => {
@@ -101,14 +100,14 @@ const Form = props => {
     )
   }
 
-  const renderButton = (label, icon) => {
+  const renderButton = (label, icon, labelLoading = label) => {
     return (
       <button
         disabled={validate() || Object.keys(errors).length > 0 || isDisable}
         className="btn btn-primary mt-3"
       >
         <span className={`${icon} mr-1`} />
-        {label}
+        {isDisable ? labelLoading : label}
       </button>
     )
   }

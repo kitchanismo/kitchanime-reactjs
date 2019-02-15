@@ -44,7 +44,7 @@ const LoginForm = ({ auth, ...props }) => {
             <React.Fragment>
               {renderInput('username', 'Username')}
               {renderInput('password', 'Password', 'password')}
-              {renderButton('Login')}
+              {renderButton('Login', null, 'Logging...')}
             </React.Fragment>
           )
         }}

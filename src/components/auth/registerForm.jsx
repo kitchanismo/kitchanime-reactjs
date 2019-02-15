@@ -100,7 +100,7 @@ const RegisterForm = ({ auth, ...props }) => {
               })}
               {renderInput('password', 'Password', 'password')}
               {renderInput('confirmPassword', 'Confirm Password', 'password')}
-              {renderButton('Register')}
+              {renderButton('Register', null, 'Registering...')}
             </React.Fragment>
           )
         }}

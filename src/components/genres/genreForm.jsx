@@ -49,7 +49,7 @@ const GenreForm = props => {
             return (
               <React.Fragment>
                 {renderInput('name', 'Name')}
-                {renderButton('Save')}
+                {renderButton('SAVE', 'fa fa-save', 'SAVING...')}
               </React.Fragment>
             )
           }}
