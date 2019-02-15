@@ -41,7 +41,9 @@ const Form = props => {
     if (errors) return
 
     setIsDisable(true)
-    doSubmit(e, data).then(() => setIsDisable(false))
+    doSubmit(e, data)
+      .then(() => setIsDisable(false))
+      .catch(() => setIsDisable(true))
   }
 
   const handleChange = ({ currentTarget: input }) => {
