@@ -3,7 +3,7 @@ import { AnimeContext } from '../../context'
 import { pagination } from '../../config.json'
 
 const SearchForm = props => {
-  const { onPageChange, onSearch, onSetEnd, onSetStart } = useContext(
+  const { onPageChange, onSearch, onSetEnd, onSetStart, total } = useContext(
     AnimeContext
   )
   const [title, setTitle] = useState('')

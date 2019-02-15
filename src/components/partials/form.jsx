@@ -43,7 +43,7 @@ const Form = props => {
     setIsDisable(true)
     doSubmit(e, data)
       .then(() => setIsDisable(false))
-      .catch(() => setIsDisable(true))
+      .catch(() => setIsDisable(false))
   }
 
   const handleChange = ({ currentTarget: input }) => {
