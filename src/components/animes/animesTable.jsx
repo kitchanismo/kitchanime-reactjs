@@ -8,6 +8,7 @@ import { toast } from 'react-toastify'
 import Paginate from './paginate'
 import SearchForm from './searchForm'
 import Loader from './../partials/loader'
+import CustomModal from './../partials/modal'
 
 const Animes = ({ auth }) => {
   const {
@@ -21,7 +22,20 @@ const Animes = ({ auth }) => {
     onSetEnd
   } = useContext(AnimeContext)
 
+  const [modal, setModal] = useState(false)
+
+  const [selectedAnime, setSelectedAnime] = useState({})
+
   const [sortColumn, setSortColumn] = useState({ path: 'name', order: 'asc' })
+
+  const toggle = async ({ target }) => {
+    setModal(modal => !modal)
+
+    if (target && target.name === 'primary') {
+      await doDelete(selectedAnime)
+      setSelectedAnime({})
+    }
+  }
 
   const columns = [
     {
@@ -58,8 +72,12 @@ const Animes = ({ auth }) => {
             </button>
           </Link>
           <button
-            onClick={async () => await doDelete(anime)}
+            onClick={async e => {
+              setSelectedAnime(anime)
+              await toggle(e)
+            }}
             className="btn btn-danger btn-sm text-white"
+            name="delete"
           >
             <span className="fa fa-trash mr-1" />
             DELETE
@@ -144,8 +162,22 @@ const Animes = ({ auth }) => {
     )
   }
 
+  const renderModal = () => {
+    return (
+      <CustomModal
+        title="Kitchanime"
+        modal={modal}
+        toggle={toggle}
+        label={`Delete ${selectedAnime.title}?`}
+        primary={{ type: 'danger', label: 'DELETE' }}
+        className="modal-dialog-centered"
+      />
+    )
+  }
+
   return (
     <React.Fragment>
+      {renderModal()}
       <div className="row no-gutters ">
         <div className="col-6 d-flex justify-content-start ">
           {renderAddBtn()}
