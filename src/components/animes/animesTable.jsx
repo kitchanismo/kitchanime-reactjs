@@ -1,14 +1,14 @@
-import React, { useContext, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { AnimeContext } from '../../context'
-import Table from '../partials/table'
-import { formatDate } from '../../services/utilsService'
-import withAuth from '../hoc/withAuth'
-import { toast } from 'react-toastify'
-import Paginate from './paginate'
-import SearchForm from './searchForm'
-import Loader from './../partials/loader'
-import CustomModal from './../partials/modal'
+import React, { useContext, useState } from "react";
+import { Link } from "react-router-dom";
+import { AnimeContext } from "../../context";
+import Table from "../partials/table";
+import { formatDate } from "../../services/utilsService";
+import withAuth from "../hoc/withAuth";
+import { toast } from "react-toastify";
+import Paginate from "./paginate";
+import SearchForm from "./searchForm";
+import Loader from "./../partials/loader";
+import CustomModal from "./../partials/modal";
 
 const Animes = ({ auth }) => {
   const {
@@ -20,49 +20,49 @@ const Animes = ({ auth }) => {
     onSearch,
     onSetStart,
     onSetEnd
-  } = useContext(AnimeContext)
+  } = useContext(AnimeContext);
 
-  const [modal, setModal] = useState(false)
+  const [modal, setModal] = useState(false);
 
-  const [selectedAnime, setSelectedAnime] = useState({})
+  const [selectedAnime, setSelectedAnime] = useState({});
 
-  const [sortColumn, setSortColumn] = useState({ path: 'name', order: 'asc' })
+  const [sortColumn, setSortColumn] = useState({ path: "name", order: "asc" });
 
   const toggle = async ({ target }) => {
-    setModal(modal => !modal)
+    setModal(modal => !modal);
 
-    if (target && target.name === 'primary') {
-      await doDelete(selectedAnime)
-      setSelectedAnime({})
+    if (target && target.name === "primary") {
+      await doDelete(selectedAnime);
+      setSelectedAnime({});
     }
-  }
+  };
 
   const columns = [
     {
-      path: 'title',
-      label: 'Title',
+      path: "title",
+      label: "Title",
       content: anime => <Link to={`/animes/${anime.id}`}>{anime.title}</Link>
     },
-    { path: 'season', label: 'Season' },
+    { path: "season", label: "Season" },
     {
-      path: 'releaseDate',
-      label: 'Release'
+      path: "releaseDate",
+      label: "Release"
     },
     {
-      path: 'type',
-      label: 'Type'
+      path: "type",
+      label: "Type"
     },
     {
-      label: 'Genres',
+      label: "Genres",
       content: anime => renderItemsName(anime.genres)
     },
     {
-      label: 'Studios',
+      label: "Studios",
       content: anime => renderItemsName(anime.studios)
     },
     {
-      key: 'actions',
-      label: 'Actions',
+      key: "actions",
+      label: "Actions",
       content: anime => (
         <div className="">
           <Link to={`/animes/${anime.id}`}>
@@ -73,8 +73,8 @@ const Animes = ({ auth }) => {
           </Link>
           <button
             onClick={async e => {
-              setSelectedAnime(anime)
-              await toggle(e)
+              setSelectedAnime(anime);
+              await toggle(e);
             }}
             className="btn btn-danger btn-sm text-white"
             name="delete"
@@ -85,54 +85,54 @@ const Animes = ({ auth }) => {
         </div>
       )
     }
-  ]
+  ];
 
   const doDelete = async anime => {
     if (!auth.isAdmin()) {
-      toast.error('Unauthorized user')
-      return
+      toast.error("Unauthorized user");
+      return;
     }
 
     if (!(await onDelete(anime))) {
-      onPageChange(pageNum - 1)
+      onPageChange(pageNum - 1);
       if (start > 1) {
-        onSetStart(start - 1)
+        onSetStart(start - 1);
       }
-      onSetEnd(end - 1)
-      return
+      onSetEnd(end - 1);
+      return;
     }
-    onRefresh()
-  }
+    onRefresh();
+  };
 
   const renderItemsName = items => {
     return items.map((item, i) => (
       <span key={i} className="badge ml-1  badge-secondary">
         {item.name}
       </span>
-    ))
-  }
+    ));
+  };
 
   const transformAnimes = () => {
     return animes.map(anime => {
       // not included to table anymore
       // anime.description = toElipse(anime.description || '', 20)
       // anime.imageUrl = toElipse(anime.imageUrl || '', 20)
-      anime.releaseDate = formatDate(anime.releaseDate)
-      return anime
-    })
-  }
+      anime.releaseDate = formatDate(anime.releaseDate);
+      return anime;
+    });
+  };
 
   const handleSort = sortColumn => {
-    onSort(sortColumn)
-    setSortColumn(sortColumn)
-  }
+    onSort(sortColumn);
+    setSortColumn(sortColumn);
+  };
 
   const withColumnActions = () => {
-    if (auth.isAdmin()) return columns
+    if (auth.isAdmin()) return columns;
 
-    const _columns = [...columns]
-    return _columns.filter(c => c.key !== 'actions')
-  }
+    const _columns = [...columns];
+    return _columns.filter(c => c.key !== "actions");
+  };
 
   const renderAddBtn = () => {
     return (
@@ -144,14 +144,14 @@ const Animes = ({ auth }) => {
           </button>
         </Link>
       )
-    )
-  }
+    );
+  };
   const renderRefreshBtn = () => {
     return (
       <div>
         <Link to="/">
           <button
-            onClick={() => onSearch('')}
+            onClick={() => onSearch("")}
             className="btn btn-secondary mt-1"
           >
             <span className="fa fa-refresh mr-1" />
@@ -159,8 +159,8 @@ const Animes = ({ auth }) => {
           </button>
         </Link>
       </div>
-    )
-  }
+    );
+  };
 
   const renderModal = () => {
     return (
@@ -169,11 +169,11 @@ const Animes = ({ auth }) => {
         modal={modal}
         toggle={toggle}
         label={`Delete ${selectedAnime.title}?`}
-        primary={{ type: 'danger', label: 'DELETE' }}
+        primary={{ type: "danger", label: "DELETE" }}
         className="modal-dialog-centered"
       />
-    )
-  }
+    );
+  };
 
   return (
     <React.Fragment>
@@ -197,7 +197,7 @@ const Animes = ({ auth }) => {
         <Paginate />
       </Loader>
     </React.Fragment>
-  )
-}
+  );
+};
 
-export default withAuth(Animes)
+export default withAuth(Animes);
