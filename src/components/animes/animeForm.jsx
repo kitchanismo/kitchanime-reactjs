@@ -101,18 +101,33 @@ const AnimeForm = ({ auth, ...props }) => {
       return;
     }
 
-    const _anime = getNewAnime(anime);
+    const _anime = getMapAnime(anime);
 
-    _anime.id ? await putAnime(_anime.id, _anime) : await postAnime(_anime);
+    const _animes = [...context.state.animes];
 
-    _anime.id ? toast.success("Updated") : toast.success("Added");
+    try {
+      const { id } = _anime.id
+        ? await putAnime(_anime.id, _anime)
+        : await postAnime(_anime);
 
-    context.onRefresh();
+      if (_anime.id) {
+        context.onUpdate(_anime);
+      } else {
+        _anime.id = id;
+        context.onAdd(_anime);
+      }
 
-    props.history.replace("/");
+      _anime.id ? toast.success("Updated") : toast.success("Added");
+
+      props.history.replace("/");
+    } catch (error) {
+      //rollback on list if somethings go wrong
+      toast.error("Something Failed!");
+      context.onSetItems(_animes);
+    }
   };
 
-  const getNewAnime = anime => {
+  const getMapAnime = anime => {
     const _anime = { ...anime };
     _anime.genreIds = selectedGenres.map(g => g.id) || [];
     _anime.studioIds = selectedStudios.map(s => s.id) || [];
