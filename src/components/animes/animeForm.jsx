@@ -122,7 +122,7 @@ const AnimeForm = ({ auth, ...props }) => {
       props.history.replace("/");
     } catch (error) {
       //rollback on list if somethings go wrong
-      toast.error("Something Failed!");
+      console.log(error);
       context.onSetItems(_animes);
     }
   };
