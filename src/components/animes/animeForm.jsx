@@ -101,33 +101,41 @@ const AnimeForm = ({ auth, ...props }) => {
       return;
     }
 
-    const _anime = getMapAnime(anime);
+    const _anime = getMapSaveAnime(anime);
 
     const _animes = [...context.state.animes];
 
     try {
+      //  console.log(context.state.animes);
       const { id } = _anime.id
         ? await putAnime(_anime.id, _anime)
         : await postAnime(_anime);
 
-      if (_anime.id) {
-        context.onUpdate(_anime);
-      } else {
-        _anime.id = id;
-        context.onAdd(_anime);
-      }
+      // if (_anime.id) {
+      //   context.onUpdate(_anime);
+      // } else {
+      //   _anime.id = id;
+      //   context.onAdd(_anime);
+      // }
 
       _anime.id ? toast.success("Updated") : toast.success("Added");
-
+      // console.log(context.state.animes);
+      context.onRefresh();
       props.history.replace("/");
     } catch (error) {
       //rollback on list if somethings go wrong
-      console.log(error);
-      context.onSetItems(_animes);
+      // console.log(error);
+      // context.onSetItems(_animes);
     }
   };
 
+  // pending to tranform anime to  anime list format
   const getMapAnime = anime => {
+    // const _anime = {...anime}
+    // _anime.studios = studios.filter(s=>s.id === anime.studioIds)
+  };
+
+  const getMapSaveAnime = anime => {
     const _anime = { ...anime };
     _anime.genreIds = selectedGenres.map(g => g.id) || [];
     _anime.studioIds = selectedStudios.map(s => s.id) || [];

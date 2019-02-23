@@ -27,6 +27,7 @@ const reducer = (state, action) => {
       return { ...state, items: [payload, ...state.items] };
     case UPDATE_ITEM:
       const items = state.items.filter(item => item.id !== payload.id);
+      console.log([payload, ...items]);
       return { ...state, items: [payload, ...items] };
     case DELETE_ITEM:
       return {
